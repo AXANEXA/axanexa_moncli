@@ -97,6 +97,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+axanexa-moncli
 
 # Spyder project settings
 .spyderproject
