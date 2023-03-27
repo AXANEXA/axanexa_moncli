@@ -218,7 +218,7 @@ class WeekValue(ComplexNullValue):
             start_date = datetime.strptime(value['week']['startDate'], DATE_FORMAT)
             end_date = datetime.strptime(value['week']['endDate'], DATE_FORMAT)
             return Week(start=start_date, end=end_date)
-        except (KeyError,ValueError, TypeError):
+        except (KeyError, ValueError, TypeError):
             return self.native_default
 
     def _cast(self, value):
@@ -236,7 +236,7 @@ class WeekValue(ComplexNullValue):
             start_date = datetime.strftime(start_date, DATE_FORMAT)
             end_date = datetime.strftime(end_date, DATE_FORMAT)
             return {'week': {'startDate': start_date, 'endDate': end_date}}
-        except (TypeError,AttributeError):
+        except (TypeError, AttributeError):
             return COMPLEX_NULL_VALUE
 
 class DependencyValue(ComplexNullValue):
@@ -249,7 +249,7 @@ class DependencyValue(ComplexNullValue):
         try:
             list_ids = value['linkedPulseIds']
             return [int(value['linkedPulseId']) for value in list_ids ]
-        except IndexError:
+        except (IndexError, KeyError):
             return []
 
     def _format(self):
