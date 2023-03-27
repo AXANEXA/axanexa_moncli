@@ -1,9 +1,9 @@
 # moncli
-A Python Client and CLI tool for Monday.com
+A Python Client and CLI tool for Monday.com. A forked from https://github.com/trix-solutions/moncli with some bug fixes
 
 ### Table of Contents ###
 * [Getting Started](#getting-started)
-   * [Setup](#setup)  
+   * [Setup](#setup)
    * [Configuring the Client](#configuring-the-client)
 * [Using Moncli](#using-moncli)
    * [Functions, Return Fields, and Arguments](#functions-return-fields-and-arguments)
@@ -11,15 +11,15 @@ A Python Client and CLI tool for Monday.com
    * [Working with Columns, Groups, and Items](#working-with-columns-groups-and-items)
    * [Changing Column Values](#changing-column-values)
    * [Posting Updates](#posting-updates)
-   * [Uploading Files](#uploading-files)  
+   * [Uploading Files](#uploading-files)
    * [Monday Models and Types](#monday-models-and-types)
-  
+
 # Getting Started
 
 ## Setup
 To add the moncli package to your project, simply execute the following command within your Python 3 environment using pip.  Please note that this package is only available for Python 3
 ```shell
-$ pip3 install moncli
+$ pip3 install axanexa-moncli
 ```
 
 ## Configuring the Client
@@ -105,7 +105,7 @@ Using a combination of return field and argument techniques, there is no shortag
 ## Managing Boards ##
 Boards are cornerstones for any Monday.com setup, and __Board__ objects are no exception containing functionality for general data management with columns, groups, and items.  The next sections below will provide some general tools regarding __Board__ management.
 
-New boards are created with the __MondayClient__ instance using the _create_board_ method as shown in the example below. 
+New boards are created with the __MondayClient__ instance using the _create_board_ method as shown in the example below.
 ```python
 # Import Boardkind enum for parameter input.
 from moncli import BoardKind
@@ -114,7 +114,7 @@ from moncli import BoardKind
 board_name = 'New Public Board'
 board_kind = BoardKind.public
 new_board = client.create_board(board_name, board_kind)
-```  
+```
 
 Existing boards are also retrieved with the __MondayClient__ using the _get_boards_ method using the _ids_ keyword argument as shown below.
 ```
@@ -122,7 +122,7 @@ board_ids = ['12345']
 retrieved_boards = client.get_boards(ids=[board_ids])
 ```
 
-When looking to retrieve only a single board by either id or name, the _get_board_ method is also available on the __MondayClient__ instance using either the _id_ or _name_ keyword argument as shown below.  
+When looking to retrieve only a single board by either id or name, the _get_board_ method is also available on the __MondayClient__ instance using either the _id_ or _name_ keyword argument as shown below.
 ```python
 # Retrieve a board by ID.
 board_id = '12345'
@@ -196,7 +196,7 @@ item = board.add_item(item_name, group_id=group_id)
 item = group.add_item(item_name)
 ```
 
-An __Item__ object can be created with column values using the optional *column_values* parameter.  Values for this parameter can be input as a dictionary in which each key represents the ID of the column to update and the value represents the value to add.  
+An __Item__ object can be created with column values using the optional *column_values* parameter.  Values for this parameter can be input as a dictionary in which each key represents the ID of the column to update and the value represents the value to add.
 ``` python
 column_values = {'text_column_1': 'New Text Value'}
 new_item_with_values = board.add_item(item_name='New Item With Text Value', column_values=column_values)
@@ -224,7 +224,7 @@ item.duplicate(with_updates=True)
 
 # Archive an item.
 item.archive()
- 
+
 # Delete an item.
 item.delete()
 ```
@@ -236,7 +236,7 @@ subitem = item.create_subitem(item_name, column_values=column_values_dict)
 
 ## Changing Column Values ##
 
-The column values of an item may also be retrieved and updated from an __Item__ instance in the following way as shown below.  
+The column values of an item may also be retrieved and updated from an __Item__ instance in the following way as shown below.
 ```
 # First get the column value.
 # Index for item.column_values may be the column id, title, or the list index integer.
@@ -250,7 +250,7 @@ item.change_column_value(column_value)
 Multiple column values are retrieved and updated from the __Item__ instance using the *change_multiple_column_values* and *get_column_values* methods respectively.  More information on these methods can be found below in the [Item](#item) section of this document.
 
 ## Posting Updates ##
-Updates represent interactions between users within a monday.com account with respect to a given item and are represented in moncli as an __Update__ object.  __Update__ instances are retrieved using the *get_updates* method from either a __MondayClient__ instance, which can retrieve all updates within the account accessible to the login user, or an __Item__ instance, which only has access to updates within the particular item.  
+Updates represent interactions between users within a monday.com account with respect to a given item and are represented in moncli as an __Update__ object.  __Update__ instances are retrieved using the *get_updates* method from either a __MondayClient__ instance, which can retrieve all updates within the account accessible to the login user, or an __Item__ instance, which only has access to updates within the particular item.
 
 Updates are added to an item using the *add_update* method from the __Item__ instance as shown below.
 ```python
@@ -273,7 +273,7 @@ item.clear_all_updates()
 
 ## Uploading Files ##
 
-Files, or assets, represent files uploaded to items via a file-type column or updates via the *add_file* method on both __Item__ and __Update__ objects. 
+Files, or assets, represent files uploaded to items via a file-type column or updates via the *add_file* method on both __Item__ and __Update__ objects.
 
 When adding files to an item, a file column via the __FileColumn__ object must be identified as the column in which to place the newly uploaded file.  This is demonstrated in the example below.
 ```python
@@ -302,7 +302,7 @@ To remove files from an update, the only option currently available is to delete
 
 ## Monday Models and Types
 
-The **MondayModel** a Python base class that enables developers to define their monday.com boards as a Python class. This powerful new addition allows developers to retrieve individual items from a board as the defined **MondayModel** subclass, make simple value edits to configured fields, and both export data for and save updated data to monday.com via the API. 
+The **MondayModel** a Python base class that enables developers to define their monday.com boards as a Python class. This powerful new addition allows developers to retrieve individual items from a board as the defined **MondayModel** subclass, make simple value edits to configured fields, and both export data for and save updated data to monday.com via the API.
 
 Both models and types leverage the [Schematics](https://schematics.readthedocs.io/en/latest/) python package.
 

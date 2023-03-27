@@ -114,3 +114,6 @@ venv.bak/
 # Visual Studio Code
 .vscode
 *.code-workspace
+
+# Mac
+.DS_Store

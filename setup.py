@@ -27,9 +27,9 @@ config = {
         'moncli.api_v2',
         'moncli.entities',
         'moncli.column_value'
-    ],    
+    ],
     'scripts': [],
-    'name': 'moncli'
+    'name': 'axanexa-moncli'
 }
 
 setup(**config)
