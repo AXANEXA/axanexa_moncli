@@ -111,13 +111,13 @@ class CountryType(MondayType):
             return cv.Country(name = value['country'], code = value['code'])
         except KeyError:
             raise ConversionError('Unable to convert value "{}" to Country.'.format(value))
-        
+
     def _export(self, value):
         if value.name and value.code:
             return {'countryName': value.name, 'countryCode': value.code}
         return self.null_value
-    
-    def validate_country(self, value): 
+
+    def validate_country(self, value):
         country = countries.get(name=value.name)
         if not country:
             raise ValidationError('Value "{}" is not a valid country.'.format(value.name))
@@ -132,7 +132,7 @@ class CreationLogType(MondayType):
     native_default = None
     is_readonly = True
 
-    
+
 class DateType(MondayType):
 
     native_type = datetime
@@ -189,7 +189,7 @@ class DependencyType(MondayType):
             except ValueError:
                 raise ConversionError('Invalid item ID: "{}".'.format(data))
         return value_list
-    
+
     def _export(self, value):
         return { 'item_ids': [data for data in value]}
 
@@ -209,7 +209,7 @@ class DropdownType(MondayType):
     def _process(self, value):
         labels = {}
         return_list = []
-        
+
         [labels.__setitem__(data['id'], data['name']) for data in self.metadata['labels']]
         for val in value:
             if isinstance(self.element_type, EnumMeta) and isinstance(val, self.element_type):
@@ -229,7 +229,7 @@ class DropdownType(MondayType):
                 return_list.append(label)
         return return_list
 
-    
+
     def _process_column_value(self, value: cv.ColumnValue):
         if isinstance(self.element_type,EnumMeta):
             return [self.element_type(data) for data in value.value]
@@ -241,7 +241,7 @@ class DropdownType(MondayType):
         for data in self.metadata['labels']:
             k,v = data.values()
             labels[v] = k
-        
+
         labels_str = value
         if isinstance(self.element_type,EnumMeta):
             labels_str = [data.value for data in value]
@@ -311,14 +311,14 @@ class ItemLinkType(MondayType):
         if not self.multiple_values:
             return value
         elif self.multiple_values:
-            return_list = []   
+            return_list = []
             for data in value:
                 try:
                     return_list.append(int(data))
                 except ValueError:
                     raise ConversionError('Invalid item ID "{}".'.format(data))
             return return_list
-            
+
     def _process_column_value(self, value: cv.ItemLinkValue):
         try:
             self.multiple_values = value.settings['allowMultipleItems']
@@ -347,7 +347,7 @@ class LastUpdatedType(MondayType):
 
 
 class LinkType(MondayType):
-    
+
     native_type = cv.Link
     null_value = {}
     allow_casts = (dict,)
@@ -357,7 +357,7 @@ class LinkType(MondayType):
             return cv.Link(value['url'],value['text'])
         except KeyError:
             raise ConversionError('Cannot convert value "{}" to Link.'.format(value))
-    
+
     def _export(self, value):
         if value.url != None:
             return {'url': value.url, 'text': value.text}
@@ -386,7 +386,7 @@ class LocationType(MondayType):
         if value.lat and value.lng:
             return { 'lat': value.lat,'lng': value.lng, 'address': value.address }
         return self.null_value
-    
+
     def validate_location(self,value):
         if not (-90 <= value.lat <= 90):
             raise ValidationError('Value "{}" is not a valid Latitude.'.format(value))
@@ -407,14 +407,14 @@ class NumberType(MondayType):
     native_type = (int, float)
     allow_casts = (str, )
     null_value = ""
-    
+
     def _cast(self, value):
         try:
             number_value = int(value) if int(value) else float(value)
             return number_value
         except TypeError:
             raise ConversionError('Couldn\'t interpret str {} as int or float.'.format(value))
-    
+
     def _export(self, value):
         return str(value)
 
@@ -450,7 +450,7 @@ class PeopleType(MondayType):
                 if isinstance(data, dict):
                     id = int(data['id'])
                     kind = enums.PeopleKind[data['kind']]
-                    return_list.append(cv.PersonOrTeam(id=id,kind=kind))               
+                    return_list.append(cv.PersonOrTeam(id=id,kind=kind))
                 elif isinstance(data, (str,int)):
                     return_list.append(cv.Person(int(data)))
                 else:
@@ -489,7 +489,7 @@ class PeopleType(MondayType):
             return {'personsAndTeams': [{'id': value.id, 'kind': value.kind.name}]}
         personsAndTeams = [{'id': data.id, 'kind': data.kind.name} for data in value]
         return {'personsAndTeams': personsAndTeams}
-        
+
     def validate_people(self, value):
         if self.max_allowed == 1 and not isinstance(value, cv.PersonOrTeam):
             raise ValidationError('Value contains too many Person or Team values: "{}".'.format(len(value)))
@@ -520,7 +520,7 @@ class PhoneType(MondayType):
         if value.phone and value.code:
             return {'phone': value.phone, 'countryShortName': value.code}
         return self.null_value
-    
+
     def validate_country_code(self, value):
         country = countries.get(alpha_2=value.code)
         if not country:
@@ -537,7 +537,7 @@ class RatingType(MondayType):
             return int(value)
         except ValueError:
             raise ConversionError('Value "{}" is not a valid rating.'.format(value))
-    
+
     def _export(self, value):
         return { 'rating': value}
 
@@ -546,7 +546,7 @@ class StatusType(MondayType):
     native_type = str
     allow_casts = (int,)
     null_value = {}
-    
+
     default_labels = {}
 
     def __init__(self, id: str = None, title: str = None, as_enum: type = None, default_labels: list = None, *args, **kwargs):
@@ -563,9 +563,9 @@ class StatusType(MondayType):
 
         if default_labels:
             self.default_labels = {str(i): default_labels[i] for i in range(len(default_labels))}
-            
+
         super().__init__(id=id, title=title, *args, **kwargs)
-    
+
     def _process(self, value):
         try:
             labels = self.metadata['labels']
@@ -583,7 +583,7 @@ class StatusType(MondayType):
             if value in labels.values():
                 return value
             raise ConversionError('Cannot find status label "{}".'.format(value))
-                
+
     def _cast(self, value):
         label = str(value)
         try:
@@ -591,22 +591,22 @@ class StatusType(MondayType):
         except:
             labels = self.default_labels
         if self.native_type == str and isinstance(value,int):
-            try:    
+            try:
                 return labels[label]
             except KeyError:
                 raise ConversionError('Cannot find status label with index "{}".'.format(value))
-            
+
         if isinstance(self.native_type, EnumMeta) and isinstance(value,str):
             try:
                 return self.native_type(label)
             except ValueError:
                     raise ConversionError('Cannot find status label with index "{}".'.format(value))
-    
+
     def _process_column_value(self, value: cv.ColumnValue):
         if self.native_type == str:
             self.choices = [value for value in self.metadata['labels'].values()]
         return super()._process_column_value(value)
-                      
+
     def _export(self, value):
             labels = self.metadata['labels']
             if self.native_type == str:
@@ -624,7 +624,6 @@ class SubItemType(MondayType):
     native_default = []
     null_value = {}
     is_readonly = True
- 
 
 class TextType(MondayType):
     native_type = str
@@ -644,11 +643,11 @@ class TagsType(MondayType):
             except ValueError:
                 raise ConversionError('Invalid Tag ID "{}".'.format(tag))
         return return_value
-    
+
     def _export(self, value):
         return {'tag_ids': value}
-        
-        
+
+
 class TimelineType(MondayType):
 
     native_type = cv.Timeline
@@ -675,9 +674,9 @@ class TimelineType(MondayType):
         if value.from_date == None or value.to_date == None:
             return {}
         return {'from': value.from_date.strftime(DATE_FORMAT), 'to': value.to_date.strftime(DATE_FORMAT)}
-        
+
     def validate_timeline(self,value):
-         if value.from_date > value.to_date:
+        if value.from_date > value.to_date:
             raise ValidationError('Timeline from date cannot be after to date.')
 
 
@@ -696,7 +695,7 @@ class TimeZoneType(MondayType):
 
 
 class WeekType(MondayType):
-    
+
     native_type = cv.Week
     null_value = {}
     allow_casts = (dict,)
@@ -706,10 +705,10 @@ class WeekType(MondayType):
             return cv.Week(value['start'],value['end'])
         except KeyError:
             raise ConversionError('Cannot convert value "{}" to Week.'.format(value))
-    
+
     def _export(self, value):
         if not (value.start and value.end) :
             return self.null_value
-        start =  value.start.strftime(DATE_FORMAT) 
+        start =  value.start.strftime(DATE_FORMAT)
         end  = value.end.strftime(DATE_FORMAT)
         return  {'week': {'startDate': start, 'endDate': end}}
