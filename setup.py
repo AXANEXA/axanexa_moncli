@@ -4,12 +4,12 @@ except:
     from distutils.core import setup
 
 config = {
-    'description': 'Moncli, a pythonic/DDD client for Monday.com',
+    'description': 'Moncli, a pythonic/DDD client for Monday.com. Maintained by Axanexa.',
     'author': 'Axanexa',
-    'url': r'https://github.com/AXANEXA/axanexa-moncli',
-    'download_url': r'https://github.com/AXANEXA/axanexa-moncli',
+    'url': r'https://github.com/AXANEXA/axanexa_moncli',
+    'download_url': r'https://github.com/AXANEXA/axanexa_moncli',
     'author_email': 'tphan@axanexa.com',
-    'version': '3.0.0',
+    'version': '1.0.0',
     'license': 'BSD 3',
     'install_requires': [
         'requests>=2.24.0',
