@@ -4,9 +4,9 @@ from datetime import datetime, timezone
 from nose.tools import eq_, raises
 from schematics.exceptions import ConversionError
 
-from moncli import column_value as cv, types as t
-from moncli.config import DATE_FORMAT, TIME_FORMAT
-from moncli.enums import ColumnType
+from axanexa_moncli import column_value as cv, types as t
+from axanexa_moncli.config import DATE_FORMAT, TIME_FORMAT
+from axanexa_moncli.enums import ColumnType
 
 
 

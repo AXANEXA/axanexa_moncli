@@ -2,9 +2,9 @@ import json
 
 from nose.tools import eq_
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import NumberType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import NumberType
 
 
 def test_number_type_should_succeed_when_to_native_returns_an_int_or_float_when_passed_a_numbervalue_value_with_api_data():
@@ -15,9 +15,9 @@ def test_number_type_should_succeed_when_to_native_returns_an_int_or_float_when_
     # Act
     int_value = number_type.to_native(column_value)
 
-    # Assert 
+    # Assert
     eq_(int_value, 1)
-    
+
 
 def test_number_type_should_succeed_when_to_native_returns_a_int_or_float_when_passed_a_int_or_float_value():
     # Arrange

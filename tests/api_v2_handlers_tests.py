@@ -1,8 +1,8 @@
 from unittest.mock import patch
 from nose.tools import ok_, eq_
 
-from moncli.api_v2 import handlers, constants
-from moncli.enums import BoardKind, ColumnType, State, NotificationTargetType, WebhookEventType, WorkspaceKind, SubscriberKind
+from axanexa_moncli.api_v2 import handlers, constants
+from axanexa_moncli.enums import BoardKind, ColumnType, State, NotificationTargetType, WebhookEventType, WorkspaceKind, SubscriberKind
 
 EXECUTE_QUERY_PATCH = 'moncli.api_v2.handlers.execute_query'
 UPLOAD_FILE_PATCH = 'moncli.api_v2.handlers.upload_file'
@@ -22,7 +22,7 @@ def test_create_board(execute_query):
 
     # Act
     board = handlers.create_board('Test', BoardKind.public, 'id', 'name', 'board_kind')
-    
+
     # Assert
     ok_(board != None)
     ok_(type(board) is dict)
@@ -38,7 +38,7 @@ def test_get_board(execute_query):
 
     # Act
     boards = handlers.get_boards('id', limit=5)
-    
+
     # Assert
     ok_(boards != None)
     ok_(type(boards) is list)
@@ -53,7 +53,7 @@ def test_archive_board(execute_query):
 
     # Act
     archived_board = handlers.archive_board('1', 'id', 'state')
-    
+
     # Assert
     ok_(archived_board != None)
     ok_(type(archived_board) is dict)
@@ -104,7 +104,7 @@ def test_create_column(execute_query):
 
     # Act
     new_column = handlers.create_column('1', title, ColumnType.text, 'id', 'title', 'type')
-    
+
     # Assert
     ok_(new_column != None)
     ok_(type(new_column) is dict)
@@ -122,7 +122,7 @@ def test_change_column_title(execute_query):
 
     # Act
     updated_item = handlers.change_column_title(column_id='text_column_1', board_id='12345678', title='Hello, world!')
-    
+
     # Assert
     ok_(updated_item != None)
     ok_(type(updated_item) is dict)
@@ -137,7 +137,7 @@ def test_change_column_value(execute_query):
 
     # Act
     updated_item = handlers.change_column_value('1', 'text_column_1', '1', 'Hello, world!', 'id')
-    
+
     # Assert
     ok_(updated_item != None)
     ok_(type(updated_item) is dict)
@@ -155,7 +155,7 @@ def test_change_simple_column_value(execute_query):
 
     # Act
     updated_item = handlers.change_simple_column_value(board_id='12345678',item_id='2345678',column_id='new_column',value="Simple Value to update")
-    
+
     # Assert
     ok_(updated_item != None)
     ok_(updated_item['id'] == item_id)
@@ -171,7 +171,7 @@ def test_change_multiple_column_value(execute_query):
 
     # Act
     updated_item = handlers.change_multiple_column_value('1', '1', column_values, 'id')
-    
+
     # Assert
     ok_(updated_item != None)
     ok_(type(updated_item) is dict)
@@ -187,7 +187,7 @@ def test_duplicate_group(execute_query):
 
     # Act
     duplicated_group = handlers.duplicate_group('1', 'group_1', 'id')
-    
+
     # Assert
     ok_(duplicated_group != None)
     ok_(duplicated_group['id'] == 'group_2')
@@ -203,7 +203,7 @@ def test_create_group(execute_query):
 
     # Act
     new_group = handlers.create_group('1', group_name, 'id', 'title')
-    
+
     # Assert
     ok_(new_group != None)
     ok_(type(new_group) is dict)
@@ -219,7 +219,7 @@ def test_archive_group(execute_query):
 
     # Act
     archived_group = handlers.archive_group('1', 'group_1', 'archived')
-    
+
     # Assert
     ok_(archived_group != None)
     ok_(type(archived_group) is dict)
@@ -235,7 +235,7 @@ def test_delete_group(execute_query):
 
     # Act
     deleted_group = handlers.delete_group('1', 'group_1', 'deleted')
-    
+
     # Assert
     ok_(deleted_group != None)
     ok_(type(deleted_group) is dict)
@@ -252,7 +252,7 @@ def test_create_item(execute_query):
 
     # Act
     new_item = handlers.create_item(item_name, '1', 'id', 'name')
-    
+
     # Assert
     ok_(new_item != None)
     ok_(type(new_item) is dict)
@@ -270,7 +270,7 @@ def test_create_subitem(execute_query):
 
     # Act
     subitem = handlers.create_subitem('1', item_name)
-    
+
     # Assert
     ok_(subitem != None)
     ok_(type(subitem) is dict)
@@ -288,7 +288,7 @@ def test_clear_item_updates(execute_query):
 
     # Act
     item = handlers.clear_item_updates(id)
-    
+
     # Assert
     ok_(item)
     ok_(type(item) is dict)
@@ -304,7 +304,7 @@ def test_get_items(execute_query):
 
     # Act
     items = handlers.get_items(page=1, limit=2)
-    
+
     # Assert
     ok_(items != None)
     ok_(type(items) is list)
@@ -319,7 +319,7 @@ def test_get_items_by_column_values(execute_query):
 
     # Act
     items = handlers.get_items_by_column_values('1', 'name', 'Item One', 'id', 'name')
-    
+
     # Assert
     ok_(items != None)
     ok_(type(items) is list)
@@ -334,7 +334,7 @@ def test_archive_item(execute_query):
 
     # Act
     archived_item = handlers.archive_item('1', 'id', 'state')
-    
+
     # Assert
     ok_(archived_item != None)
     ok_(type(archived_item) is dict)
@@ -349,7 +349,7 @@ def test_delete_item(execute_query):
 
     # Act
     deleted_item = handlers.delete_item('1', 'id', 'state')
-    
+
     # Assert
     ok_(deleted_item != None)
     ok_(type(deleted_item) is dict)
@@ -366,7 +366,7 @@ def test_duplicate_item(execute_query):
 
     # Act
     duplicate_item = handlers.duplicate_item('1', '1')
-    
+
     # Assert
     ok_(duplicate_item)
     eq_(duplicate_item['id'], id)
@@ -383,7 +383,7 @@ def test_create_update(execute_query):
 
     # Act
     new_update = handlers.create_update(body, item_id, 'id', 'body', 'item_id')
-    
+
     # Assert
     ok_(new_update != None)
     ok_(type(new_update) is dict)
@@ -399,7 +399,7 @@ def test_get_updates(execute_query):
 
     # Act
     updates = handlers.get_updates('id', limit=5)
-    
+
     # Assert
     ok_(updates != None)
     ok_(type(updates) is list)
@@ -417,7 +417,7 @@ def test_delete_update(execute_query):
 
     # Act
     update = handlers.delete_update('1')
-    
+
     # Assert
     ok_(update)
     ok_(type(update) is dict)
@@ -432,10 +432,10 @@ def test_create_notification(execute_query):
     # Arrange
     text = 'Did you eat, Grandma?'
     execute_query.return_value = {'text': text}
-    
+
     # Act
     notification = handlers.create_notification(text, '1', '2', NotificationTargetType.Project, 'text')
-    
+
     # Assert
     ok_(notification != None)
     ok_(type(notification) is dict)
@@ -448,10 +448,10 @@ def test_create_or_get_tag(execute_query):
     # Arrange
     name = 'Tag One'
     execute_query.return_value = {'id': '1', 'name': 'Tag One'}
-    
+
     # Act
     tag = handlers.create_or_get_tag(name, 'id', 'name')
-    
+
     # Assert
     ok_(tag != None)
     ok_(type(tag) is dict)
@@ -466,7 +466,7 @@ def test_get_tags(execute_query):
 
     # Act
     tags = handlers.get_tags('id')
-    
+
     # Assert
     ok_(tags != None)
     ok_(type(tags) is list)
@@ -481,7 +481,7 @@ def test_get_users(execute_query):
 
     # Act
     users = handlers.get_users('id', 'name')
-    
+
     # Assert
     ok_(users != None)
     ok_(type(users) is list)
@@ -497,12 +497,12 @@ def test_get_teams(execute_query):
 
     # Act
     teams = handlers.get_teams('id', 'name')
-    
+
     # Assert
     ok_(teams != None)
     ok_(type(teams) is list)
     ok_(len(teams) == 1)
-    
+
 
 @patch(EXECUTE_QUERY_PATCH)
 def test_get_me(execute_query):
@@ -513,7 +513,7 @@ def test_get_me(execute_query):
 
     # Act
     me = handlers.get_me('')
-    
+
     # Assert
     ok_(me != None)
     ok_(type(me) is dict)
@@ -568,7 +568,7 @@ def test_add_file_to_update(upload_file):
 
     # Act
     asset = handlers.add_file_to_update('12345', '/Users/test/{}'.format(name))
-    
+
     # Assert
     ok_(asset != None)
     ok_(type(asset) is dict)
@@ -586,7 +586,7 @@ def test_add_file_to_column(upload_file):
 
     # Act
     asset = handlers.add_file_to_column('12345', 'files', '/Users/test/{}'.format(name))
-    
+
     # Assert
     ok_(asset != None)
     ok_(type(asset) is dict)
@@ -615,7 +615,7 @@ def test_create_workspace(execute_query):
     ok_(workspace['kind'] == kind.name)
     ok_(workspace['description'] == description)
 
-    
+
 @patch(EXECUTE_QUERY_PATCH)
 def test_add_users_to_workspace(execute_query):
 
@@ -633,7 +633,7 @@ def test_add_users_to_workspace(execute_query):
     ok_(workspace['id'] == id)
     ok_(workspace['kind'] == kind.name)
 
-    
+
 @patch(EXECUTE_QUERY_PATCH)
 def test_remove_users_from_workspace(execute_query):
 
@@ -666,7 +666,7 @@ def test_add_teams_to_workspace(execute_query):
     ok_(type(teams is list))
     eq_(len(teams), 3)
 
-    
+
 @patch(EXECUTE_QUERY_PATCH)
 def test_remove_teams_from_workspace(execute_query):
 

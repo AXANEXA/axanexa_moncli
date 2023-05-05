@@ -1,8 +1,8 @@
 from unittest.mock import patch
 from nose.tools import ok_, eq_
 
-from moncli import client
-from moncli.enums import BoardKind
+from axanexa_moncli import client
+from axanexa_moncli.enums import BoardKind
 
 
 @patch('moncli.api_v2.create_board')
@@ -17,7 +17,7 @@ def test_should_duplicate_a_group(duplicate_group, create_group, create_board):
     board = client.create_board('Test Board 1', BoardKind.public)
     group = board.add_group('Group 1')
 
-    # Act 
+    # Act
     group = group.duplicate()
 
     # Assert
@@ -35,11 +35,11 @@ def test_should_archive_a_group(archive_group, create_group, create_board):
     create_board.return_value = {'id': '1', 'name': 'Test Board 1'}
     create_group.return_value = {'id': 'group_01', 'title': 'Group 1'}
     archive_group.return_value = {'id': 'group_01', 'title': 'Group 1', 'archived': 'true'}
-    
+
     board = client.create_board('Test Board 1', BoardKind.public)
     group = board.add_group('Group 1')
 
-    # Act 
+    # Act
     group = group.archive()
 
     # Assert
@@ -58,11 +58,11 @@ def test_should_delete_a_group(delete_group, create_group, create_board):
     create_board.return_value = {'id': '1', 'name': 'Test Board 1'}
     create_group.return_value = {'id': 'group_01', 'title': 'Group 1'}
     delete_group.return_value = {'id': 'group_01', 'title': 'Group 1', 'deleted': 'true'}
-    
+
     board = client.create_board('Test Board 1', BoardKind.public)
     group = board.add_group('Group 1')
 
-    # Act 
+    # Act
     group = group.delete()
 
     # Assert
@@ -81,11 +81,11 @@ def test_should_create_an_item(create_item, create_group, create_board):
     create_board.return_value = {'id': '1', 'name': 'Test Board 1'}
     create_group.return_value = {'id': 'group_01', 'title': 'Group 1'}
     create_item.return_value = {'id': '1', 'name': 'Item 1'}
-    
+
     board = client.create_board('Test Board 1', BoardKind.public)
     group = board.add_group('Group 1')
 
-    # Act 
+    # Act
     item = group.add_item('Item 1')
 
     # Assert
@@ -107,11 +107,11 @@ def test_should_retrieve_a_list_of_items(get_items, get_boards, create_group, cr
         {'id': '1', 'groups': [
             {'id': 'group_01', 'items':[
                 {'id': '1', 'name': 'Item 1'}]}]}]
-    
+
     board = client.create_board('Test Board 1', BoardKind.public)
     group = board.add_group('Group 1')
 
-    # Act 
+    # Act
     items = group.get_items()
 
     # Assert

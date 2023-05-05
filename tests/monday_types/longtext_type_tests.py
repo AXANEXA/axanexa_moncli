@@ -2,9 +2,9 @@ import json
 
 from nose.tools import eq_
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import LongTextType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import LongTextType
 
 
 def test_longtext_type_should_succeed_when_to_native_returns_a_str_when_passing_a_longtext_value_with_api_data():

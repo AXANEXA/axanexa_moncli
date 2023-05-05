@@ -1,5 +1,5 @@
-from moncli.routes import constants
-from moncli.routes.requests import execute_get
+from axanexa_moncli.routes import constants
+from axanexa_moncli.routes.requests import execute_get
 
 def get_tag_by_id(api_key, tag_id):
 

@@ -2,13 +2,13 @@ import json
 from schematics.exceptions import ConversionError, DataError
 from nose.tools import eq_,raises
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import ItemLinkType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import ItemLinkType
 
 
 def test_should_succeed_when_to_native_returns_a_list_when_passed_an_itemlink_value_value_with_api_data_itemlink_type():
-    
+
     # Arrange
     id = "itemlink_1"
     title = 'ItemLink'
@@ -102,7 +102,7 @@ def test_should_succeed_when_to_primitive_returns_dict_when_multiple_values_to_f
     value = itemlink_type.to_primitive(value)
 
     # Assert
-    eq_(value['item_ids'], [12345])  
+    eq_(value['item_ids'], [12345])
 
 @raises(ConversionError)
 def test_should_fail_when_passed_invalid_int_or_str_for_to_native_function_for_itemlink_type():

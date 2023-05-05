@@ -1,14 +1,14 @@
-from moncli.routes import constants
-from moncli.routes.requests import execute_get, execute_post, execute_delete
+from axanexa_moncli.routes import constants
+from axanexa_moncli.routes.requests import execute_get, execute_post, execute_delete
 
 def get_updates(
-        api_key, 
-        page = 1, 
-        per_page = 25, 
-        offset = 0, 
-        since = None, 
-        until = None, 
-        updated_since = None, 
+        api_key,
+        page = 1,
+        per_page = 25,
+        offset = 0,
+        since = None,
+        until = None,
+        updated_since = None,
         updated_until = None):
 
     resource_url = constants.UPDATES

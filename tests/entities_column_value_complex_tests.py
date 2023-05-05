@@ -3,9 +3,9 @@ from datetime import datetime
 
 from nose.tools import eq_, raises
 
-from moncli import column_value as cv, error as e
-from moncli.config import DATE_FORMAT
-from moncli.enums import *
+from axanexa_moncli import column_value as cv, error as e
+from axanexa_moncli.config import DATE_FORMAT
+from axanexa_moncli.enums import *
 
 
 def test_should_create_item_link_column_value_with_no_api_data():
@@ -20,7 +20,7 @@ def test_should_create_item_link_column_value_with_no_api_data():
     column_value = cv.create_column_value(column_type,id=id,title=title,value=value)
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format,{})
 
 
@@ -41,7 +41,7 @@ def test_should_create_item_link_column_value_with_api_data():
     # Act
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format['item_ids'],[123456789])
 
 
@@ -54,7 +54,7 @@ def test_should_set_null_item_link_column_value():
     # Act
     column_value.value = {}
 
-    # Assert 
+    # Assert
     eq_(column_value.value,[])
 
 
@@ -71,7 +71,7 @@ def test_should_append_integer_id_to_item_link_column_value():
         'item_ids':[123456789]
     }
 
-    # Assert 
+    # Assert
     eq_(format,format_dict)
     eq_(format['item_ids'],[123456789])
 
@@ -89,7 +89,7 @@ def test_should_append_string_id_to_item_link_column_value():
         'item_ids':[123456789]
     }
 
-    # Assert 
+    # Assert
     eq_(format,format_dict)
     eq_(format['item_ids'],[123456789])
 
@@ -123,7 +123,7 @@ def test_should_item_link_column_with_api_data_with_no_linkedpulseid_key():
     column_value = cv.create_column_value(column_type,id=id,title=title,value=value)
 
 
-    # Assert 
+    # Assert
     eq_(column_value.value,[])
 
 
@@ -134,7 +134,7 @@ def test_should_set_checkbox_column_value_with_no_api_input_data():
     column_type = ColumnType.checkbox
     title = 'Checkbox'
     column_value = cv.create_column_value(column_type, id=id, title=title)
-    
+
     # Act
     format = column_value.format()
 
@@ -171,7 +171,7 @@ def test_should_return_checkbox_column_value_as_false_when_value_is_set_to_none(
 
     # Assert
     eq_(column_value.value, False)
-    
+
 
 def test_should_set_checkbox_column_value_with_bool_value():
 
@@ -225,7 +225,7 @@ def test_should_create_timeline_column_value_with_no_api_data():
     title = 'timeline 1'
     column_type = ColumnType.timeline
     column_value = cv.create_column_value(column_type,id=id,title=title,value=None)
-    
+
     # Act
     format = column_value.format()
 
@@ -283,7 +283,7 @@ def test_should_create_timeline_column_value_with_api_data_and_null_visualizatio
     eq_(format['to'], to_date)
 
 def test_should_set_timeline_column_value_to_None():
-    
+
     # Arrange
     id = 'timeline1'
     title = 'timeline 3'
@@ -316,7 +316,7 @@ def test_should_set_timeline_column_value_with_valid_dict():
     column_value.value = value
 
     # Assert
-    eq_(column_value.value.from_date,from_date) 
+    eq_(column_value.value.from_date,from_date)
     eq_(column_value.value.to_date,to_date)
 
 
@@ -345,7 +345,7 @@ def test_should_set_date_value_to_none_for_timeline_column_value():
     }
     value = json.dumps(dict_value)
     column_value = cv.create_column_value(column_type,id=id,title=title,value=value)
-    
+
     # Act
     column_value.value.from_date = None
     format = column_value.format()
@@ -367,7 +367,7 @@ def test_should_set_from_date_greater_than_to_date_timeline_column_value():
     }
     value = json.dumps(dict_value)
     column_value = cv.create_column_value(column_type,id=id,title=title)
-    
+
     # Act
     column_value.value = value
 
@@ -379,7 +379,7 @@ def test_should_return_empty_complex_value_when_no_value_is_provided():
     value = json.dumps(dict_value)
     column_value = cv.create_column_value(column_type, id=id, title=title, value=value)
 
-    # Act 
+    # Act
     format = column_value.format()
 
     # Assert
@@ -398,7 +398,7 @@ def test_should_week_column_with_no_api_data():
     # Act
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format,{})
 
 
@@ -408,7 +408,7 @@ def test_should_week_column_with_api_data():
     id = 'week1'
     title="New Week"
     column_type = ColumnType.week
-    api_return_value = { 
+    api_return_value = {
         'week': {
             'startDate': '2021-09-20',
             'endDate': '2021-09-26'
@@ -420,7 +420,7 @@ def test_should_week_column_with_api_data():
     # Act
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format['week']['startDate'],'2021-09-20')
 
 
@@ -433,7 +433,7 @@ def test_should_set_none_value_to_week_column_value():
     # Act
     column_value.value = value
 
-    # Assert 
+    # Assert
     eq_(column_value.value,value)
 
 
@@ -448,7 +448,7 @@ def test_should_test_week_value_to_week_column_value():
 
     # Act
     column_value.value = value
-    
+
     # Assert
     eq_(column_value.value.start, value.start)
     eq_(column_value.value.end, value.end)
@@ -469,7 +469,7 @@ def test_should_set_dict_value_to_week_column_value():
 
     # Act
     column_value.value = value
-    
+
     # Assert
     eq_(column_value.value.start, value['start'])
     eq_(column_value.value.end, value['end'])
@@ -484,7 +484,7 @@ def test_should_set_invalid_dict_value_to_week_column_value():
     column_value = cv.create_column_value(column_type,id=id,title=title)
 
     # Act
-    column_value.value = value 
+    column_value.value = value
 
 
 def test_should_set_none_start_value_to_week_column_value():
@@ -497,10 +497,10 @@ def test_should_set_none_start_value_to_week_column_value():
     # Act
     column_value.value = value
     format = column_value.format()
-    
+
     # Assert
     eq_(format, {})
-    
+
 
 def test_should_create_country_column_value_with_no_api_input_data():
 
@@ -550,8 +550,8 @@ def test_should_set_country_column_value_to_none():
 
     # Assert
     eq_(column_value.value, None)
-    
-    
+
+
 def test_should_set_country_column_value_to_country_value():
 
     # Arrange
@@ -618,7 +618,7 @@ def test_should_create_country_column_value_with_name_set_to_none():
     # Act
     column_value.value = value
     format = column_value.format()
-    
+
     # Assert
     eq_(format, {})
 
@@ -637,7 +637,7 @@ def test_should_create_country_column_value_with_code_set_to_none():
     # Act
     column_value.value = value
     format = column_value.format()
-    
+
     # Assert
     eq_(format, {})
 
@@ -749,7 +749,7 @@ def test_should_create_hour_column_value_with_no_api_data():
     column_value = cv.create_column_value(column_type,id=id,title=title)
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format,{})
 
 
@@ -769,7 +769,7 @@ def test_should_create_hour_column_value_with_api_data():
     # Act
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format, hour_value)
 
 
@@ -784,7 +784,7 @@ def test_should_set_none_to_hour_column_value():
     column_value = cv.create_column_value(column_type,id=id,title=title)
     column_value.value = None
 
-    # Assert 
+    # Assert
     eq_(column_value.value, None)
 
 
@@ -798,7 +798,7 @@ def test_should_set_hour_value_to_hour_column_value():
     column_value = cv.create_column_value(column_type,id=id,title=title)
     column_value.value = hour_value
 
-    # Assert 
+    # Assert
     eq_(column_value.value, hour_value)
 
 
@@ -812,11 +812,11 @@ def test_should_set_valid_dict_to_hour_column_value():
                 }
     hour_value = cv.Hour(hour=23,minute=59)
     column_value = cv.create_column_value(column_type,id=id,title=title)
-    
+
     # Act
     column_value.value = value
 
-    # Assert 
+    # Assert
     eq_(column_value.value.hour, hour_value.hour)
 
 
@@ -830,12 +830,12 @@ def test_should_set_invalid_dict_to_hour_column_value():
             }
     column_value = cv.create_column_value(column_type,id=id,title=title)
 
-    # Act 
+    # Act
     column_value.value = value
 
 
 def test_should_set_hour_value_to_none_for_hour_column_value():
-    
+
     # Arrange
     id = 'hour'
     title="hour"
@@ -846,12 +846,12 @@ def test_should_set_hour_value_to_none_for_hour_column_value():
                 }
     value = json.dumps(hour_value)
     column_value = cv.create_column_value(column_type,id=id,title=title,value=value)
-    
+
     # Act
     column_value.value.hour = None
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format, cv.COMPLEX_NULL_VALUE)
 
 
@@ -865,17 +865,17 @@ def test_should_set_minute_value_to_none_for_hour_column_value():
                 }
     value = json.dumps(hour_value)
     column_value = cv.create_column_value(column_type,id=id,title=title,value=value)
-    
+
     # Act
     column_value.value.minute = None
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format['minute'],0)
 
 
 def test_should_create_rating_column_value_with_no_api_input_data():
-    
+
     # Arrange
     id = 'rating'
     title = 'rating 1'
@@ -890,7 +890,7 @@ def test_should_create_rating_column_value_with_no_api_input_data():
 
 
 def test_should_create_rating_column_value_with_api_input_data():
-    
+
     # Arrange
     id = 'rating'
     title = 'rating 1'
@@ -907,7 +907,7 @@ def test_should_create_rating_column_value_with_api_input_data():
 
 
 def test_should_set_rating_column_value_with_none_value():
-    
+
     # Arrange
     id = 'rating'
     title = 'rating 1'
@@ -922,7 +922,7 @@ def test_should_set_rating_column_value_with_none_value():
 
 
 def test_should_set_rating_column_value_with_int_value():
-    
+
     # Arrange
     id = 'rating'
     title = 'rating 1'
@@ -947,7 +947,7 @@ def test_should_timezone_column_value_with_no_api_data():
     # Act
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format,{})
 
 
@@ -964,7 +964,7 @@ def test_should_timezone_column_value_with_api_data():
     # Act
     format = column_value.format()
 
-    # Assert     
+    # Assert
     eq_(format,tz_value)
 
 
@@ -995,6 +995,6 @@ def test_should_timezone_column_value_str_timezone_value():
     column_value.value = 'Asia/Kolkata'
     format = column_value.format()
 
-    # Assert 
+    # Assert
     eq_(format['timezone'],'Asia/Kolkata')
 

@@ -2,10 +2,10 @@ from nose.tools import eq_,raises
 from unittest.mock import patch
 from schematics.exceptions import ConversionError
 
-from moncli import *
-from moncli import entities as en
-from moncli.enums import ColumnType
-from moncli import types as t
+from axanexa_moncli import *
+from axanexa_moncli import entities as en
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli import types as t
 
 
 @patch.object(en.Item,'get_column_values')
@@ -47,7 +47,7 @@ def test_should_succeed_when_to_native_returns_an_int_when_passed_a_str_value_to
 
 
 def test_should_succeed_when_to_native_returns_a_none_when_passed_a_none_to_rating_type():
-    
+
     rating_value = cv.create_column_value(ColumnType.text,id="text1",title="text")
     rating_value.value = None
     rating_type = t.RatingType(id=1)
@@ -68,7 +68,7 @@ def test_should_succeed_when_to_native_raises_a_conversion_error_when_passed_an_
     # Act
     rating_type.to_native(rating_value.value)
 
-    
+
 
 
 

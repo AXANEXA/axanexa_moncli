@@ -1,15 +1,15 @@
-from moncli.routes import constants
+from axanexa_moncli.routes import constants
 from .requests import execute_get, execute_post, execute_put, execute_delete
 
 def get_pulses(
-        api_key, 
+        api_key,
         page = 1,
-        per_page = 25, 
+        per_page = 25,
         offset = 0,
         order_by_latest = False,
         since = None,
         until = None):
-    
+
     resource_url = constants.PULSES
 
     params = {
@@ -96,12 +96,12 @@ def get_pulse_notes(api_key, pulse_id):
     return execute_get(api_key, resource_url)
 
 
-def post_pulse_notes(api_key, 
-        pulse_id, 
-        title, 
-        content, 
-        owners_only = True, 
-        user_id = None, 
+def post_pulse_notes(api_key,
+        pulse_id,
+        title,
+        content,
+        owners_only = True,
+        user_id = None,
         create_update = None):
 
     resource_url = constants.PULSE_NOTES.format(pulse_id)
@@ -122,7 +122,7 @@ def post_pulse_notes(api_key,
 
 
 def put_pulse_note_by_id(
-        api_key, 
+        api_key,
         pulse_id,
         note_id,
         title,

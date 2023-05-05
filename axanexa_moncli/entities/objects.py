@@ -1,5 +1,5 @@
 import json, warnings
-from moncli.entities.base import BaseCollection
+from axanexa_moncli.entities.base import BaseCollection
 
 from schematics.models import Model
 from schematics.types import StringType, BooleanType, IntType, DictType, ListType, ModelType
@@ -7,7 +7,7 @@ from schematics.types import StringType, BooleanType, IntType, DictType, ListTyp
 
 class MondayClientCredentials():
     """monday.com client credentials.
-    
+
     Properties
 
         api_key_v1 : `str`
@@ -22,7 +22,7 @@ class MondayClientCredentials():
 
 class ActivityLog(Model):
     """monday.com client credentials.
-    
+
     Properties
 
         account_id : `str`
@@ -115,7 +115,7 @@ class Tag(Model):
 
 class Plan(Model):
     """ A payment plan.
-    
+
     Properties
 
         max_users : `int`

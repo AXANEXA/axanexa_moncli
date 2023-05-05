@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from nose.tools import ok_, eq_
 
-from moncli import client, entities as en
+from axanexa_moncli import client, entities as en
 
 TEST_USER = en.User(**{'creds': None, 'id': '1', 'email': 'foo.bar@test.com'})
 
@@ -11,10 +11,10 @@ def test_update_should_return_list_of_replies(get_updates):
 
     # Arrange
     get_updates.return_value = [{'id': '1', 'creator_id': '1', 'item_id': '1', 'replies': [{'id': '2', 'creator_id': '1'}]}]
-    
+
     # Act
     updates = client.get_updates()
-    
+
     # Assert
     ok_(updates != None)
     eq_(len(updates), 1)
@@ -25,7 +25,7 @@ def test_update_should_return_list_of_replies(get_updates):
 @patch('moncli.api_v2.get_users')
 def test_update_should_return_creator(get_users, get_updates):
 
-    # Arrange  
+    # Arrange
     get_updates.return_value = [{'id': '1', 'creator_id': '1', 'item_id': '1'}]
     get_users.return_value = [TEST_USER.to_primitive()]
     update = client.get_updates()[0]
@@ -61,7 +61,7 @@ def test_should_return_list_of_replies_for_an_update(get_updates):
     update = client.get_updates()[0]
     get_updates.return_value = [{'id': '1', 'creator_id': '1', 'item_id': '1', 'replies': [{'id': reply_id, 'body': reply_body}]}]
 
-    # Act 
+    # Act
     replies = update.get_replies()
 
     # Assert
@@ -75,7 +75,7 @@ def test_should_return_list_of_replies_for_an_update(get_updates):
 @patch('moncli.api_v2.add_file_to_update')
 def test_should_add_file_to_update(add_file_to_update, get_updates):
 
-    # Arrange 
+    # Arrange
     id = '12345'
     name = '33.jpg'
     url = 'https://test.monday.com/12345/33.jpg'
@@ -97,11 +97,11 @@ def test_should_add_file_to_update(add_file_to_update, get_updates):
 @patch('moncli.api_v2.get_updates')
 def test_should_get_files_from_update(get_updates):
 
-    # Arrange 
+    # Arrange
     id = '12345'
     name = '33.jpg'
     url = 'https://test.monday.com/12345/33.jpg'
-    get_updates.return_value = [{'id': '1', 'item_id': '1', 'creator_id': '1'}]   
+    get_updates.return_value = [{'id': '1', 'item_id': '1', 'creator_id': '1'}]
     update = client.get_updates()[0]
     get_updates.return_value = [{'id': '1', 'item_id': '1', 'creator_id': '1', 'assets': [{'id': id, 'name': name, 'url': url}]}]
 
@@ -120,7 +120,7 @@ def test_should_get_files_from_update(get_updates):
 @patch('moncli.api_v2.delete_update')
 def test_should_should_update(delete_update, get_updates):
 
-    # Arrange 
+    # Arrange
     id = '1'
     item_id = '1'
     creator_id = '1'

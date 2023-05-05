@@ -2,13 +2,13 @@ from datetime import datetime, timezone
 
 from nose.tools import eq_
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import CreationLogType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import CreationLogType
 
 def test_should_suceed_when_to_native_returns_a_local_datetime_when_passed_a_creationlogvalue_value_with_api_data_to_creationlog_type():
 
-    # Arrange 
+    # Arrange
     value = datetime.now().astimezone(timezone.utc)
     value = value.replace(microsecond=0)
     column_value_data = {

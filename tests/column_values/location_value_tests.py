@@ -2,8 +2,8 @@ import json
 
 from nose.tools import eq_, raises
 
-from moncli import column_value as cv, error as e
-from moncli.enums import *
+from axanexa_moncli import column_value as cv, error as e
+from axanexa_moncli.enums import *
 
 def test_should_create_a_location_column_with_no_api_input_data():
 
@@ -193,4 +193,4 @@ def test_should_return_dict_value_when_location_value_is_set_to_location_column_
     # Assert
     eq_(location['lat'],0.0)
     eq_(location['lng'],0.0)
-    eq_(location['address'],'Origin of Earth') 
+    eq_(location['address'],'Origin of Earth')

@@ -1,8 +1,8 @@
 from unittest.mock import patch
 from nose.tools import ok_, eq_
 
-from moncli import client
-from moncli.enums import NotificationTargetType
+from axanexa_moncli import client
+from axanexa_moncli.enums import NotificationTargetType
 
 
 @patch('moncli.api_v2.get_users')
@@ -44,12 +44,12 @@ def test_user_should_get_teams(get_users):
 @patch('moncli.api_v2.create_notification')
 def test_user_should_send_a_notification(create_notification, get_users):
 
-    # Arrange 
+    # Arrange
     get_users.return_value = [{'id': '1', 'email': 'test.user@foobar.org'}]
     create_notification.return_value = {'id': '1', 'text': 'Text 1'}
     user = client.get_users()[0]
 
-    # Act 
+    # Act
     notification = user.send_notification('Text 1', '2', NotificationTargetType.Post)
 
     # Assert
@@ -61,12 +61,12 @@ def test_user_should_send_a_notification(create_notification, get_users):
 @patch('moncli.api_v2.get_teams')
 def test_team_should_retrieve_list_of_users(get_teams):
 
-    # Arrange 
+    # Arrange
     get_teams.return_value = [{'id': '1', 'name': 'Team 1'}]
     team = client.get_teams()[0]
     get_teams.return_value = [{'id': '1', 'users':[{'id': '1', 'email': 'test.user@foobar.org'}]}]
 
-    # Act 
+    # Act
     users = team.get_users()
 
     # Assert
@@ -87,7 +87,7 @@ def test_account_should_get_plan_info(get_account):
 
     # Act
     plan = account.get_plan()
-    
+
     # Assert
     ok_(plan != None)
     eq_(plan.max_users, 1)

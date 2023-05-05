@@ -2,9 +2,9 @@ import json
 
 from nose.tools import eq_
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import TextType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import TextType
 
 
 def test_text_type_should_succeed_when_to_native_returns_a_str_when_passing_in_a_textvalue_value_with_api_get_itemdata():
@@ -23,7 +23,7 @@ def test_text_type_should_succeed_when_to_native_returns_a_str_when_passing_in_a
 def test_text_type_should_succeed_when_to_native_returns_a_str_when_passing_in_either_int_or_floats():
 
     # Arrange
-    
+
     text_type = TextType(title='Text Column 1')
 
     # Act
@@ -68,7 +68,7 @@ def test_text_type_should_succeed_when_to_primitive_returns_str_when_passed_in_a
     int_value = text_type.to_primitive(1)
     float_value = text_type.to_primitive(1.0)
     str_value = text_type.to_primitive("text")
-    
+
     # Assert
     eq_(int_value,'1')
     eq_(float_value,'1.0')

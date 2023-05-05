@@ -2,14 +2,14 @@ import json
 from nose.tools import eq_,raises
 from schematics.exceptions import ConversionError, DataError
 
-from moncli import *
-from moncli import entities as en
-from moncli.enums import ColumnType
-from moncli.models import MondayModel
-from moncli import types as t
+from axanexa_moncli import *
+from axanexa_moncli import entities as en
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.models import MondayModel
+from axanexa_moncli import types as t
 
 def test_should_succeed_when_to_native_returns_a_country_when_passing_in_a_country_value_value_with_api_data_to_country_type():
-    
+
     # Arrange
     id = 'country_1'
     title = 'Country'
@@ -27,7 +27,7 @@ def test_should_succeed_when_to_native_returns_a_country_when_passing_in_a_count
 
 
 def test_should_succeed_when_to_native_returns_none_when_passed_a_none_to_country_type():
-    
+
     # Arrange
     country_type = t.CountryType(title='Country')
 
@@ -100,7 +100,7 @@ def test_should_succeed_when_to_primitive_returns_empty_dict_when_passed_a_count
 
 @raises(DataError)
 def test_should_succeed_when_validate_country_raises_a_validationerror_when_passed_a_country_with_an_invalid_name_to_country_type():
-    
+
     # Arrange
     test.country_value= cv.Country('IINDA','IN')
     test.country_value.name = ''

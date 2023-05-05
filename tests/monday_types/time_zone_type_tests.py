@@ -1,10 +1,10 @@
 from schematics.exceptions import DataError
 from nose.tools import eq_,raises
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.models import MondayModel
-from moncli.types import TimeZoneType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.models import MondayModel
+from axanexa_moncli.types import TimeZoneType
 
 
 def test_should_succeed_when_to_native_returns_a_str_when_passed_a_timezonevalue_value_with_api_data_to_world_clock_type():

@@ -1,8 +1,8 @@
 from unittest.mock import patch
 from nose.tools import ok_, eq_, raises
 
-from moncli import client, entities as en
-from moncli.enums import BoardKind, NotificationTargetType, WorkspaceKind, WorkspaceSubscriberKind
+from axanexa_moncli import client, entities as en
+from axanexa_moncli.enums import BoardKind, NotificationTargetType, WorkspaceKind, WorkspaceSubscriberKind
 
 
 @patch('moncli.api_v2.create_board')
@@ -16,7 +16,7 @@ def test_should_create_a_new_board(create_board):
     # Act
     board = client.create_board(board_name, board_kind)
 
-    # Assert 
+    # Assert
     ok_(board != None)
     eq_(board.name, board_name)
     eq_(board.board_kind, board_kind.name)
@@ -57,11 +57,11 @@ def test_should_fail_to_retrieve_single_board_due_to_too_many_parameters():
 @patch('moncli.api_v2.get_boards')
 def test_should_retrieve_a_board_by_id(get_boards):
 
-    # Arrange 
+    # Arrange
     id = '1'
     name = 'Test Board 1'
     get_boards.return_value = [{'id': id, 'name': name}]
-    
+
     # Act
     board = client.get_board(id=id)
 
@@ -75,13 +75,13 @@ def test_should_retrieve_a_board_by_id(get_boards):
 @patch('moncli.api_v2.get_boards')
 def test_should_retrieve_a_board_by_name(get_boards, get_board_by_id):
 
-    # Arrange 
+    # Arrange
     id = '2'
     name = 'Test Board 2'
     get_boards.return_value = [{'id': '1', 'name': 'Test Board 1'}, {'id': id, 'name': name}]
     get_board_by_id.return_value = en.Board(id=id, name=name)
-    
-    # Act 
+
+    # Act
     board = client.get_board(name=name)
 
     # Assert
@@ -93,11 +93,11 @@ def test_should_retrieve_a_board_by_name(get_boards, get_board_by_id):
 @patch('moncli.api_v2.archive_board')
 def test_should_archive_a_board(archive_board):
 
-    # Arrange 
+    # Arrange
     id = '1'
     archive_board.return_value = {'id': id}
 
-    # Act 
+    # Act
     board = client.archive_board(id)
 
     # Assert
@@ -118,9 +118,9 @@ def test_should_retrieve_assets(get_assets):
     # Arrange
     asset_id = '12345'
     name = '33.jpg'
-    url = 'http://test.monday.com/files/33.jpg' 
+    url = 'http://test.monday.com/files/33.jpg'
     get_assets.return_value = [{'id': asset_id, 'name': name, 'url': url}]
-    
+
     # Act
     assets = client.get_assets([12345])
 
@@ -134,10 +134,10 @@ def test_should_retrieve_assets(get_assets):
 @patch('moncli.api_v2.get_items')
 def test_should_get_items(get_items):
 
-    # Arrange 
+    # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 1'}]
-    
-    # Act 
+
+    # Act
     items = client.get_items()
 
     # Assert
@@ -148,12 +148,12 @@ def test_should_get_items(get_items):
 @patch('moncli.api_v2.get_updates')
 def test_should_get_updates(get_updates):
 
-    # Arrange 
+    # Arrange
     id = '1'
     body = 'Hello, world!'
     get_updates.return_value = [{'id': id, 'body': body}]
 
-    # Act 
+    # Act
     updates = client.get_updates()
 
     # Assert
@@ -166,12 +166,12 @@ def test_should_get_updates(get_updates):
 @patch('moncli.api_v2.clear_item_updates')
 def test_should_clear_item_updates(clear_item_updates):
 
-    # Arrange 
+    # Arrange
     id = '1'
     name = 'Hello, world!'
     clear_item_updates.return_value = {'id': id, 'name': name}
 
-    # Act 
+    # Act
     item = client.clear_item_updates(id)
 
     # Assert
@@ -183,13 +183,13 @@ def test_should_clear_item_updates(clear_item_updates):
 @patch('moncli.api_v2.delete_update')
 def test_should_delete_update(delete_update):
 
-    # Arrange 
+    # Arrange
     id = '1'
     item_id = '12'
     creator_id = '123'
     delete_update.return_value = {'id': id, 'item_id': item_id, 'creator_id': creator_id}
-    
-    # Act 
+
+    # Act
     update = client.delete_update(id)
 
     # Assert
@@ -202,11 +202,11 @@ def test_should_delete_update(delete_update):
 @patch('moncli.api_v2.create_notification')
 def test_should_create_a_notification(create_notification):
 
-    # Arrange 
+    # Arrange
     text = 'Text 1'
     create_notification.return_value = {'id': '1', 'text': text}
 
-    # Act 
+    # Act
     notification = client.create_notification(text, '1', '2', NotificationTargetType.Post)
 
     # Assert
@@ -217,11 +217,11 @@ def test_should_create_a_notification(create_notification):
 @patch('moncli.api_v2.create_or_get_tag')
 def test_should_create_or_get_a_tag(create_or_get_tag):
 
-    # Arrange 
+    # Arrange
     name = 'Tag 1'
     create_or_get_tag.return_value = {'id': '1', 'name': name, 'color': 'Black'}
 
-    # Act 
+    # Act
     tag = client.create_or_get_tag(name)
 
     # Assert
@@ -233,11 +233,11 @@ def test_should_create_or_get_a_tag(create_or_get_tag):
 
 def test_should_retrieve_list_of_tags(get_tags):
 
-    # Arrange 
+    # Arrange
     name = 'Tag 1'
     get_tags.return_value = [{'id': '1', 'name': name, 'color': 'Black'}]
-    
-    # Act 
+
+    # Act
     tags = client.get_tags()
 
     # Assert
@@ -265,11 +265,11 @@ def test_should_create_workspace(create_workspace):
     eq_(workspace.name, name)
     eq_(workspace.kind, kind.name)
     eq_(workspace.description, description)
-    
-    
+
+
 @patch('moncli.api_v2.add_users_to_workspace')
 def test_should_add_users_to_workspace(add_users_to_workspace):
-    
+
     #Arrange
     id = '12345'
     user_ids = ['1','2','3','4','5']
@@ -289,14 +289,14 @@ def test_should_remove_users_from_workspace(delete_users_from_workspace):
 
     id = '12345'
     user_ids = ['1','2','3','4','5']
-    
+
     delete_users_from_workspace.return_value = [{'id': id}]
 
     # Act
     workspace = client.delete_users_from_workspace(id ,user_ids)
     eq_(workspace[0].id, id)
 
-    
+
 @patch('moncli.api_v2.add_teams_to_workspace')
 def test_should_add_teams_to_workspace(add_teams_to_workspace):
 
@@ -312,7 +312,7 @@ def test_should_add_teams_to_workspace(add_teams_to_workspace):
     ok_(teams != None)
     ok_(type(teams is list))
     eq_(len(teams), 3)
-    
+
 
 @patch('moncli.api_v2.delete_teams_from_workspace')
 def test_should_delete_teams_from_workspace(delete_teams_from_workspace):
@@ -334,12 +334,12 @@ def test_should_delete_teams_from_workspace(delete_teams_from_workspace):
 @patch('moncli.api_v2.get_users')
 def test_should_retrieve_list_of_users(get_users):
 
-    # Arrange 
+    # Arrange
     name = 'User 1'
     email = 'user.one@test.com'
     get_users.return_value = [{'id': '1', 'name': name, 'email': email}]
 
-    # Act 
+    # Act
     users = client.get_users()
 
     # Assert
@@ -352,11 +352,11 @@ def test_should_retrieve_list_of_users(get_users):
 @patch('moncli.api_v2.get_teams')
 def test_should_retrieve_list_of_teams(get_teams):
 
-    # Arrange 
+    # Arrange
     name = 'User 1'
     get_teams.return_value = [{'id': '1', 'name': name}]
 
-    # Act 
+    # Act
     teams = client.get_teams()
 
     # Assert
@@ -369,12 +369,12 @@ def test_should_retrieve_list_of_teams(get_teams):
 
 def test_should_retrieve_me(get_me):
 
-    # Arrange 
+    # Arrange
     name = 'User 2'
     username = "test@foo.bar"
     get_me.return_value = {'id': '1', 'name': name, 'email': username}
-    
-    # Act 
+
+    # Act
     user = client.get_me()
 
     # Assert

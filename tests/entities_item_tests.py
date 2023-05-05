@@ -1,12 +1,12 @@
 import json
-from moncli.entities.item import ItemError
+from axanexa_moncli.entities.item import ItemError
 
 from unittest.mock import patch
 from nose.tools import ok_, eq_, raises
 
-from moncli import client, entities as en, column_value as cv
-from moncli.enums import ColumnType
-from moncli.entities.item import ItemError
+from axanexa_moncli import client, entities as en, column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.entities.item import ItemError
 
 
 @patch('moncli.api_v2.get_items')
@@ -22,7 +22,7 @@ def test_item_should_get_board(get_items):
     # Act
     board = item.get_board()
 
-    # Assert 
+    # Assert
     ok_(board != None)
     eq_(board.id, id)
     eq_(board.name, name)
@@ -41,7 +41,7 @@ def test_item_should_get_group(get_items):
     # Act
     group = item.get_group()
 
-    # Assert 
+    # Assert
     ok_(group != None)
     eq_(group.id, id)
     eq_(group.title, title)
@@ -61,7 +61,7 @@ def test_item_should_get_column_values(get_columns, get_board, get_items):
     # Act
     column_values = item.get_column_values()
 
-    # Assert 
+    # Assert
     ok_(column_values != None)
     eq_(len(column_values), 1)
     eq_(column_values[0].title, 'Text Column 01')
@@ -83,7 +83,7 @@ def test_item_should_get_column_values_for_default_status_column(get_columns, ge
     # Act
     column_values = item.get_column_values()
 
-    # Assert 
+    # Assert
     ok_(column_values != None)
     eq_(len(column_values), 1)
     eq_(column_values[0].title, 'Status Column 01')
@@ -105,7 +105,7 @@ def test_item_should_get_column_values_for_status_column(get_columns, get_board,
     # Act
     column_values = item.get_column_values()
 
-    # Assert 
+    # Assert
     ok_(column_values != None)
     eq_(len(column_values), 1)
     eq_(column_values[0].title, 'Status Column 01')
@@ -151,7 +151,7 @@ def test_item_should_get_column_value_by_id(get_items):
     # Act
     column_value = item.get_column_value(id='text_column_01')
 
-    # Assert 
+    # Assert
     ok_(column_value != None)
     eq_(column_value.title, column_title)
     eq_(column_value.text, text_value)
@@ -161,7 +161,7 @@ def test_item_should_get_column_value_by_id(get_items):
 @patch('moncli.api_v2.get_items')
 def test_item_should_get_column_value_by_title(get_items):
 
-    # Arrange 
+    # Arrange
     column_id = 'text_column_01'
     column_title = 'Text Column 01'
     text_value = 'Gello, Hrandma!'
@@ -172,7 +172,7 @@ def test_item_should_get_column_value_by_title(get_items):
     # Act
     column_value = item.get_column_value(title=column_title)
 
-    # Assert 
+    # Assert
     ok_(column_value != None)
     eq_(column_value.title, column_title)
     eq_(column_value.text, text_value)
@@ -187,16 +187,16 @@ def test_item_should_get_column_value_with_extra_id(get_column_values, get_items
     get_items.return_value = [{'id': '1', 'name': 'Test Item 1'}]
     item = client.get_items()[0]
     get_column_values.return_value = en.BaseColumnCollection([cv.LongTextValue(**{
-        'id': 'text_column_01', 
-        'title': 'Text Column 01', 
-        'text': 'Hello, Grandma', 
+        'id': 'text_column_01',
+        'title': 'Text Column 01',
+        'text': 'Hello, Grandma',
         'value': json.dumps({'id': '1', 'text': 'Hello, Grandma'})})
     ])
 
     # Act
     column_value = item.get_column_value(title='Text Column 01')
 
-    # Assert 
+    # Assert
     ok_(column_value != None)
     eq_(column_value.title, 'Text Column 01')
     eq_(column_value.value, 'Hello, Grandma')
@@ -252,7 +252,7 @@ def test_should_return_item_for_valid_column_value(get_board,get_items,change_co
     new_value = cv.create_column_value(ColumnType.long_text,id=id, value=value).format()
     # Act
     new_item = item.change_column_value(id=id,column_value=new_value)
-    
+
 
     # Assert
     ok_(new_item != None)
@@ -339,12 +339,12 @@ def test_item_should_fail_to_update_column_value_with_invalid_column_value_with_
 def test_should_fail_to_change_simple_column_value_with_too_many_parameters(get_items):
     # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 01'}]
-    
+
     item = client.get_items()[0]
     id = "long_text"
     title = "mock title"
 
-    # Act 
+    # Act
 
     item.change_simple_column_value(id,title,value="change value")
 
@@ -355,9 +355,9 @@ def test_should_fail_to_change_column_value_from_too_few_parameters( get_items):
     # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 01'}]
     item = client.get_items()[0]
-    
 
-    # Act 
+
+    # Act
 
     item.change_simple_column_value(value="change value")
 
@@ -367,15 +367,15 @@ def test_should_fail_to_change_column_value_from_too_few_parameters( get_items):
 @patch.object(en.Item, 'get_column_values')
 @patch('moncli.api_v2.change_simple_column_value')
 def test_should_update_simple_column_value(change_simple_column_value, get_column_values,get_board, get_items):
-    
+
     # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 01'}]
     get_board.return_value = en.Board(**{'id': '1', 'name': 'Test Board 1'})
     column_value = cv.create_column_value(
-        ColumnType.long_text, 
-        id= 'long_text', 
-        title= 'Description', 
-        text= "My previous keyword doesn't work", 
+        ColumnType.long_text,
+        id= 'long_text',
+        title= 'Description',
+        text= "My previous keyword doesn't work",
         value= json.dumps({'text': 'My previous keyword'}))
     get_column_values.return_value = en.BaseColumnCollection([column_value])
     item = client.get_items()[0]
@@ -383,28 +383,28 @@ def test_should_update_simple_column_value(change_simple_column_value, get_colum
 
     # Act
     item = item.change_simple_column_value(id=column_value.id,title=None,value="new value")
-    
-    # Assert 
+
+    # Assert
     ok_(item != None)
     eq_(item.id, '1'),
     eq_(item.name, 'Test Item 01')
 
-    
+
 @patch('moncli.api_v2.get_items')
 @patch.object(en.Item, 'get_board')
 @patch.object(en.Item, 'get_column_values')
 @patch('moncli.api_v2.change_simple_column_value')
 def test_should_update_simple_column_value_for_status(change_simple_column_value,get_column_values, get_board, get_items):
-    
+
     # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 01'}]
     get_board.return_value = en.Board(**{'id': '1', 'name': 'Test Board 1'})
     item = client.get_items()[0]
     column_value = cv.create_column_value(
-        ColumnType.status, 
-        id= 'long_text', 
-        title= 'Description', 
-        text= "My previous keyword doesn't work", 
+        ColumnType.status,
+        id= 'long_text',
+        title= 'Description',
+        text= "My previous keyword doesn't work",
         value= json.dumps({"index":14,"post_id": None,"changed_at":"2020-05-30T19:51:09.981Z"}),
         settings_str=json.dumps({'labels': {'14': 'new value'}}))
     get_column_values.return_value = en.BaseColumnCollection([column_value])
@@ -412,8 +412,8 @@ def test_should_update_simple_column_value_for_status(change_simple_column_value
 
     # Act
     item = item.change_simple_column_value(id=column_value.id,value="new value")
-    
-    # Assert 
+
+    # Assert
     ok_(item != None)
     eq_(item.id, '1'),
     eq_(item.name, 'Test Item 01')
@@ -433,7 +433,7 @@ def test_item_should_change_multiple_column_values_with_dictionary(change_multip
     # Act
     item = item.change_multiple_column_values({'text_column_01': 'Hello, world!'})
 
-    # Assert 
+    # Assert
     ok_(item != None)
     eq_(item.name, 'Test Item 01')
 
@@ -453,7 +453,7 @@ def test_item_should_change_multiple_column_values_with_column_value_list(change
     column_value = cv.create_column_value(ColumnType.text, id='text_column_01', title='Text Column 01', text='Hello, world!', value=json.dumps('Hello, world!'))
     item = item.change_multiple_column_values([column_value])
 
-    # Assert 
+    # Assert
     ok_(item != None)
     eq_(item.name, 'Test Item 01')
 
@@ -472,7 +472,7 @@ def test_item_should_add_a_subitem(create_subitem, get_items):
     # Act
     subitem = item.create_subitem(name)
 
-    # Assert 
+    # Assert
     ok_(subitem != None)
     eq_(subitem.id, id)
     eq_(subitem.name, name)
@@ -490,7 +490,7 @@ def test_item_should_move_item_to_group(move_item_to_group, get_items):
     # Act
     item = item.move_to_group('group_01')
 
-    # Assert 
+    # Assert
     ok_(item != None)
     eq_(item.name, 'Test Item 01')
 
@@ -507,7 +507,7 @@ def test_item_should_archive_item(archive_item, get_items):
     # Act
     item = item.archive()
 
-    # Assert 
+    # Assert
     ok_(item != None)
     eq_(item.name, 'Test Item 01')
 
@@ -524,7 +524,7 @@ def test_item_should_delete_item(delete_item, get_items):
     # Act
     item = item.delete()
 
-    # Assert 
+    # Assert
     ok_(item != None)
     eq_(item.name, 'Test Item 01')
 
@@ -535,7 +535,7 @@ def test_item_should_duplicate_itself(duplicate_item, get_items):
 
     # Arrange
     id = '2'
-    name = 'Test Item 01 Dupe'   
+    name = 'Test Item 01 Dupe'
     get_items.return_value = [{'id': '1', 'name': 'Test Item 01', 'board':{'id': '1', 'name': 'Test Board'}}]
     duplicate_item.return_value = {'id': id, 'name': name}
     item = client.get_items()[0]
@@ -543,7 +543,7 @@ def test_item_should_duplicate_itself(duplicate_item, get_items):
     # Act
     duplicate = item.duplicate()
 
-    # Assert 
+    # Assert
     ok_(duplicate)
     eq_(duplicate.id, id)
     eq_(duplicate.name, name)
@@ -561,7 +561,7 @@ def test_item_should_add_update(create_update, get_items):
     # Act
     update = item.add_update('This is a text body')
 
-    # Assert 
+    # Assert
     ok_(update != None)
     eq_(update.body, 'This is a text body')
 
@@ -577,7 +577,7 @@ def test_item_should_get_list_of_item_updates(get_items):
     # Act
     updates = item.get_updates()
 
-    # Assert 
+    # Assert
     ok_(updates != None)
     eq_(len(updates), 1)
     eq_(updates[0].to_primitive(), item.updates[0].to_primitive())
@@ -600,7 +600,7 @@ def test_item_should_delete_update(delete_update, get_items):
     # Act
     update = item.delete_update(id)
 
-    # Assert 
+    # Assert
     ok_(update)
     eq_(update.id, id)
     eq_(update.item_id, item_id)
@@ -633,7 +633,7 @@ def test_item_should_clear_item_updates(clear_item_updates, get_items):
     # Act
     updated_item = item.clear_updates()
 
-    # Assert 
+    # Assert
     ok_(updated_item)
     eq_(updated_item.id, id)
     eq_(len(updated_item.updates), 0)
@@ -643,7 +643,7 @@ def test_item_should_clear_item_updates(clear_item_updates, get_items):
 @patch('moncli.api_v2.get_items')
 @patch('moncli.api_v2.add_file_to_column')
 def test_item_should_add_file(add_file_to_column, get_items):
-    
+
     # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 01', 'board': {'id': '1'}}]
     add_file_to_column.return_value = {'id': '12345', 'name': '33.jpg', 'url': 'https://test.monday.com/12345/33.jpg'}
@@ -653,7 +653,7 @@ def test_item_should_add_file(add_file_to_column, get_items):
     # Act
     asset = item.add_file(file_column, '/Users/test/33.jpg')
 
-    # Assert 
+    # Assert
     ok_(asset != None)
     eq_(asset.id, '12345')
     eq_(asset.name, '33.jpg')
@@ -662,7 +662,7 @@ def test_item_should_add_file(add_file_to_column, get_items):
 
 @patch('moncli.api_v2.get_items')
 def test_item_should_get_files(get_items):
-    
+
     # Arrange
     asset_id = '12345'
     name = '33.jpg'
@@ -674,7 +674,7 @@ def test_item_should_get_files(get_items):
     # Act
     assets = item.get_files()
 
-    # Assert 
+    # Assert
     ok_(assets != None)
     eq_(assets[0].id, '12345')
     eq_(assets[0].name, '33.jpg')
@@ -692,7 +692,7 @@ def test_should_get_activity_logs(get_items, get_boards):
     item = client.get_items(ids=['1'])[0]
     get_boards.return_value = [{'id': '1', 'name': 'Test Board 1', 'activity_logs': [{'id': id, 'account_id': account_id}]}]
 
-    # Act 
+    # Act
     activity_logs = item.get_activity_logs()
 
     # Assert
@@ -704,7 +704,7 @@ def test_should_get_activity_logs(get_items, get_boards):
 @patch('moncli.api_v2.get_items')
 @raises(ItemError)
 def test_item_should_fail_to_remove_file(get_items):
-    
+
     # Arrange
     get_items.return_value = [{'id': '1', 'name': 'Test Item 1', 'board': {'id': '1'}}]
     item = client.get_items()[0]

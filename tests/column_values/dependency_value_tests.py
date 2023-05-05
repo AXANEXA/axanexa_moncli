@@ -2,8 +2,8 @@ import json
 
 from nose.tools import eq_, raises
 
-from moncli import column_value as cv, error as e
-from moncli.enums import *
+from axanexa_moncli import column_value as cv, error as e
+from axanexa_moncli.enums import *
 
 
 def test_should_create_dependency_column_value_with_no_api_input_data():

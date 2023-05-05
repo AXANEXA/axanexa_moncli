@@ -2,13 +2,13 @@ import json
 from datetime import datetime,timezone
 from nose.tools import eq_
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import LastUpdatedType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import LastUpdatedType
 
 def test_should_suceed_when_to_native_returns_a_local_datetime_when_passed_a_last_updatedvalue_value_with_api_data_to_last_updated_type():
 
-    # Arrange 
+    # Arrange
     value = datetime(2021, 10, 4, 19, 45, 20, tzinfo=timezone.utc)
     column_value_data = {
         'id': 'last_updated_1',

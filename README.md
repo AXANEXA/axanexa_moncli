@@ -1,5 +1,7 @@
 # moncli
-A Python Client and CLI tool for Monday.com. Axanexa has forked the Python package "moncli" from the original repository https://github.com/trix-solutions/moncli to continue maintaining it and adding new features, allowing developers to continue using the package for their Monday.com project management tasks
+A Python Client and CLI tool for Monday.com.
+
+Axanexa has forked the Python package "moncli" from the original repository https://github.com/trix-solutions/moncli to continue maintaining it and adding new features, allowing developers to continue using the package for their Monday.com project management tasks.
 
 # AXANEXA
 We are a monday.com silver partner. We will continue to upkeep this version and keep it publicly available to help promote the growth and support the community of monday.com users and partners. Please visit our website https://www.axanexa.com to learn more.

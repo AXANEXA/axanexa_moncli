@@ -3,10 +3,10 @@ from nose.tools import eq_,raises
 from enum import Enum
 import json
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.models import MondayModel
-from moncli import types as t
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.models import MondayModel
+from axanexa_moncli import types as t
 
 # Common Column Value
 
@@ -47,16 +47,16 @@ settings_str = json.dumps(settings)
 column_value = cv.create_column_value(
     column_type, id=id, title=title, value=value, settings_str=settings_str)
 
-    
+
 def test_should_succeed_when_to_native_returns_a_list_when_passed_a_dropdownvalue_value_with_api_data_to_dropdown_type():
 
     # Arrange
     dropdown_type = t.DropdownType(title='Dropdown')
 
-    # Act 
+    # Act
     format = dropdown_type.to_native(column_value)[0]
 
-    # Assert    
+    # Assert
     eq_(format, 'Date')
 
 
@@ -65,10 +65,10 @@ def test_should_succeed_when_to_native_returns_an_empty_list_when_passed_a_none_
     # Arrange
     dropdown_type = t.DropdownType(title='Dropdown')
 
-    # Act 
+    # Act
     format = dropdown_type.to_native(None)
 
-    # Assert    
+    # Assert
     eq_(format, [])
 
 
@@ -78,7 +78,7 @@ def test_should_succeed_when_to_native_returns_a_list_of_str_labels_when_passed_
     dropdown_type = t.DropdownType(title='Dropdown')
     dropdown_type.to_native(column_value)
 
-    # Act 
+    # Act
     format = dropdown_type.to_native([1,2,3])
 
     # Assert
@@ -87,7 +87,7 @@ def test_should_succeed_when_to_native_returns_a_list_of_str_labels_when_passed_
 
 def test_should_succeed_when_to_native_returns_a_list_of_mapped_values_when_passed_a_list_of_str_or_int_index_or_label_values_and_element_type_is_an_enum_class_to_dropdown_type():
 
-    # Arrange    
+    # Arrange
     dropdown_type = t.DropdownType(title='Dropdown',as_enum=DropdownEnum)
     dropdown_type.to_native(column_value)
 
@@ -103,10 +103,10 @@ def test_should_succeed_when_to_primitive_returns_an_empty_dict_when_passed_a_no
     # Arrange
     dropdown_type = t.DropdownType(title='Dropdown')
 
-    # Act 
+    # Act
     format = dropdown_type.to_primitive(None)
 
-    # Assert    
+    # Assert
     eq_(format, {})
 
 
@@ -116,7 +116,7 @@ def test_should_succeed_when_to_primitive_returns_export_dict_when_passed_in_a_l
     dropdown_type = t.DropdownType(title='Dropdown',as_enum=DropdownEnum)
     dropdown_type.to_native(column_value)
 
-    # Act 
+    # Act
     format = dropdown_type.to_primitive(['Date','Text'])
 
     # Assert
@@ -129,7 +129,7 @@ def test_should_succeed_when_to_primitive_returns_export_dict_when_passed_a_list
     dropdown_type = t.DropdownType(title='Dropdown',as_enum=DropdownEnum)
     dropdown_type.to_native(column_value)
 
-    # Act 
+    # Act
     format = dropdown_type.to_primitive([DropdownEnum.date,DropdownEnum.text])
 
     # Assert
@@ -143,7 +143,7 @@ def test_should_raise_a_conversionerror_when_passed_a_list_containing_an_invalid
     dropdown_type = t.DropdownType(title='Dropdown',as_enum=DropdownEnum)
     dropdown_type.to_native(column_value)
 
-    # Act 
+    # Act
     dropdown_type.to_primitive([23])
 
 
@@ -154,6 +154,6 @@ def test_should_raise_conversionerror_when_passed_a_list_containing_an_invalid_s
     dropdown_type = t.DropdownType(title='Dropdown',as_enum=DropdownEnum)
     dropdown_type.to_native(column_value)
 
-    # Act 
+    # Act
     dropdown_type.to_primitive(['Data','Table'])
 

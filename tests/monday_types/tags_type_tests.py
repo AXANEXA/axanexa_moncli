@@ -1,9 +1,9 @@
 from schematics.exceptions import ConversionError
 from nose.tools import eq_,raises
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli import types as t
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli import types as t
 
 def test_should_succeed_when_to_native_returns_a_list_when_passing_in_a_tagsvalue_value_with_api_data_to_tags_type():
     # Arrange
@@ -38,7 +38,7 @@ def test_should_raise_conversion_error_when_invalid_tags_value_passed_to_tags_ty
     # Act
     tags_type.to_native(["invalid string"])
 
-    
+
 
 def test_should_succeed_when_to_primitive_returns_an_empty_dict_when_passed_in_a_none_to_tags_type():
     # Arrange

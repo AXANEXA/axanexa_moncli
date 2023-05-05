@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 
 from nose.tools import eq_, raises
 
-from moncli import column_value as cv, error as e
-from moncli.enums import *
+from axanexa_moncli import column_value as cv, error as e
+from axanexa_moncli.enums import *
 
 
 def test_should_create_creation_log_column_value_with_datetime_value_using_input_api_data():
@@ -54,5 +54,5 @@ def test_should_raise_columnvalueerror_when_calling_format_for_creation_log():
     column_value = cv.create_column_value(column_type, **column_value_data)
 
 
-    # Act 
+    # Act
     column_value.format()

@@ -3,8 +3,8 @@ from datetime import datetime
 from re import L
 
 from nose.tools import ok_, eq_, raises
-from moncli import column_value as cv, error as e
-from moncli.enums import *
+from axanexa_moncli import column_value as cv, error as e
+from axanexa_moncli.enums import *
 
 
 def test_should_return_empty_text_column_value():
@@ -332,7 +332,7 @@ def test_should_create_empty_date_column_value_with_empty_date_input_data():
 
 
 def test_should_create_date_column_value_when_time_input_is_empty_string():
-    
+
     # Arrange
     id = 'date_1'
     title = 'Date'
@@ -494,16 +494,16 @@ def test_should_create_a_dropdown_column_value_with_api_input_data():
     column_value = cv.create_column_value(
         column_type, id=id, title=title, value=value, settings_str=settings_str)
 
-    # Act 
+    # Act
     format = column_value.format()
 
-    # Assert    
+    # Assert
     eq_(format['ids'], [1])
 
 
 @raises(e.ColumnValueError)
 def test_should_set_invalid_integer_to_dropdown_column_value():
-    
+
     # Arrange
     id = 'dropdown_1'
     column_type = ColumnType.dropdown
@@ -531,7 +531,7 @@ def test_should_set_invalid_integer_to_dropdown_column_value():
 
 @raises(e.ColumnValueError)
 def test_should_set_invalid_string_to_dropdown_index_column_value():
-    
+
     # Arrange
     id = 'dropdown_1'
     column_type = ColumnType.dropdown
@@ -559,7 +559,7 @@ def test_should_set_invalid_string_to_dropdown_index_column_value():
 
 @raises(e.ColumnValueError)
 def test_should_set_invalid_string_to_dropdown_label_column_value():
-    
+
     # Arrange
     id = 'dropdown_1'
     column_type = ColumnType.dropdown
@@ -594,8 +594,8 @@ def test_should_create_a_status_column_value_with_no_api_input_data():
     column_value = cv.create_column_value(column_type, id=id, title=title)
 
     # Act
-    format = column_value.format() 
-    
+    format = column_value.format()
+
     #Assert
     eq_(format, {})
 
@@ -629,7 +629,7 @@ def test_should_set_none_to_status_value():
     column_type = ColumnType.status
     column_value = cv.create_column_value(column_type, id=id, title=title)
 
-    # Act 
+    # Act
     column_value.value = None
 
     #Assert
@@ -646,7 +646,7 @@ def test_should_set_invalid_string_label_value_to_status_value():
     settings_str = json.dumps(settings)
     column_value = cv.create_column_value(column_type, id=id, title=title,settings_str=settings_str)
 
-    # Act 
+    # Act
     column_value.value = "Not Done"
 
 
@@ -680,7 +680,7 @@ def test_should_set_invalid_integer_to_status_index_value():
     value = 123
     column_value = cv.create_column_value(column_type, id=id, title=title,settings_str=settings_str)
 
-    # Act 
+    # Act
 
     column_value.value = value
 
@@ -715,7 +715,7 @@ def test_should_set_invalid_string_to_status_index_value():
     value = '123'
     column_value = cv.create_column_value(column_type, id=id, title=title,settings_str=settings_str)
 
-    # Act 
+    # Act
     column_value.value = value
 
 
@@ -849,7 +849,7 @@ def test_should_set_phone_column_value_to_invalid_dict_value():
 
     # Act
     column_value.value = value
-    
+
 
 def test_should_create_phone_column_value_with_phone_set_to_none():
 
@@ -1119,7 +1119,7 @@ def test_should_set_link_column_value_to_none():
 
     # Assert
     eq_(column_value.value, None)
-    
+
 
 def test_should_set_link_column_value_to_link_value():
 
@@ -1155,7 +1155,7 @@ def test_should_set_link_column_value_to_string_value():
 
     # Assert
     eq_(column_value.value.url, url)
-    eq_(column_value.value.text, text)  
+    eq_(column_value.value.text, text)
 
 
 def test_should_return_email_column_value_with_email_value_when_value_is_set_to_str():
@@ -1176,7 +1176,7 @@ def test_should_return_email_column_value_with_email_value_when_value_is_set_to_
     eq_(column_value.value.email,email)
     eq_(column_value.value.text,text)
 
-    
+
 def test_should_set_to_valid_dict_to_email_column_value():
 
     # Arrange
@@ -1194,17 +1194,17 @@ def test_should_set_to_valid_dict_to_email_column_value():
     eq_(column_value.value.email,email)
     eq_(column_value.value.text,text)
 
-    
+
 @raises(e.ColumnValueError)
 def test_should_raise_column_value_error_when_value_is_set_to_invalid_dict():
-    
+
     # Arrange
     id = 'email_value_7'
     title = "Email"
     column_type = ColumnType.email
     column_value = cv.create_column_value(column_type, id=id, title=title)
     value = {'this': 'aint your average email'}
-    
+
     # Act
     column_value.value = value
 

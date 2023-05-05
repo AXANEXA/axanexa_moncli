@@ -1,12 +1,12 @@
 import json
 from nose.tools import eq_, raises
 
-from moncli import column_value as cv, error as e
-from moncli.enums import *
+from axanexa_moncli import column_value as cv, error as e
+from axanexa_moncli.enums import *
 
 
 def test_should_create_file_column_value_with_empty_list_value_using_no_input_api_data():
-    
+
     # Arrange
     id = 'file1'
     title = "file"
@@ -21,7 +21,7 @@ def test_should_create_file_column_value_with_empty_list_value_using_no_input_ap
 
 
 def test_should_create_file_column_value_with_an_item_id_list_value_using_input_api_data():
-    
+
     # Arrange
     id = 'file1'
     title = "file"
@@ -29,11 +29,11 @@ def test_should_create_file_column_value_with_an_item_id_list_value_using_input_
     value={
         'files': [
             {
-            'fileType': 'ASSET', 
-            'assetId': 300958781, 
-            'name': 'test.png', 
-            'isImage': 'true', 
-            'createdAt': 1632860467966, 
+            'fileType': 'ASSET',
+            'assetId': 300958781,
+            'name': 'test.png',
+            'isImage': 'true',
+            'createdAt': 1632860467966,
             'createdBy': '7882361'
             }
         ]
@@ -48,7 +48,7 @@ def test_should_create_file_column_value_with_an_item_id_list_value_using_input_
 
 @raises(e.ColumnValueError)
 def test_should_raiseerror_when_trying_to_set_a_value_to_file_column_value():
-    
+
     # Arrange
     id = 'file1'
     title = "file"
@@ -56,11 +56,11 @@ def test_should_raiseerror_when_trying_to_set_a_value_to_file_column_value():
     value={
         'files': [
             {
-            'fileType': 'ASSET', 
-            'assetId': 300958781, 
-            'name': 'test.png', 
-            'isImage': 'true', 
-            'createdAt': 1632860467966, 
+            'fileType': 'ASSET',
+            'assetId': 300958781,
+            'name': 'test.png',
+            'isImage': 'true',
+            'createdAt': 1632860467966,
             'createdBy': '7882361'
             }
         ]
@@ -71,11 +71,11 @@ def test_should_raiseerror_when_trying_to_set_a_value_to_file_column_value():
     column_value.value = {
         'files': [
             {
-            'fileType': 'ASSET', 
-            'assetId': 300958781, 
-            'name': 'test.png', 
-            'isImage': 'true', 
-            'createdAt': 1632860467966, 
+            'fileType': 'ASSET',
+            'assetId': 300958781,
+            'name': 'test.png',
+            'isImage': 'true',
+            'createdAt': 1632860467966,
             'createdBy': '7882361'
             }
         ]
@@ -83,7 +83,7 @@ def test_should_raiseerror_when_trying_to_set_a_value_to_file_column_value():
 
 @raises(e.ColumnValueError)
 def test_shoucl_raise_column_value_error_when_calling_format_for_a_file_column_value():
-    
+
     # Arrange
     id = 'file1'
     title = "file"

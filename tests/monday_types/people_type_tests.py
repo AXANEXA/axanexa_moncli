@@ -2,10 +2,10 @@ import json
 from schematics.exceptions import ConversionError, DataError
 from nose.tools import eq_,raises
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType, PeopleKind
-from moncli.models import MondayModel
-from moncli.types import PeopleType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType, PeopleKind
+from axanexa_moncli.models import MondayModel
+from axanexa_moncli.types import PeopleType
 
 
 def test_should_succeed_when_to_native_returns_a_list_when_passing_in_peoplevalue_value_with_api_data_and_max_allowed_is_not_1():
@@ -29,7 +29,7 @@ def test_should_succeed_when_to_native_returns_a_list_when_passing_in_peoplevalu
     eq_(value[1].kind, PeopleKind.person)
 
 def test_should_suceed_when_to_native_returns_a_personorteam_when_passing_in_a_peoplevalue_with_api_data_and_max_allowed_is_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=1)
 
@@ -41,7 +41,7 @@ def test_should_suceed_when_to_native_returns_a_personorteam_when_passing_in_a_p
     eq_(value.kind, PeopleKind.person)
 
 def test_should_suceed_when_to_native_returns_an_empty_list_when_passed_a_none_and_max_allowed_is_not_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=2)
 
@@ -53,7 +53,7 @@ def test_should_suceed_when_to_native_returns_an_empty_list_when_passed_a_none_a
 
 
 def test_should_suceed_when_to_native_returns_an_none_when_passed_none_and_max_allowed_is_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=1)
 
@@ -64,7 +64,7 @@ def test_should_suceed_when_to_native_returns_an_none_when_passed_none_and_max_a
     eq_(value,None)
 
 def test_should_suceed_when_to_native_returns_a_list_of_personorteam_values_when_passed_a_list_containing_valid_import_dict_int_and_str_values_and_max_allowed_is_not_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=2)
     people_list = [{'id': 13435, 'kind': 'person'}, {'id': 11234, 'kind': 'person'}]
@@ -78,7 +78,7 @@ def test_should_suceed_when_to_native_returns_a_list_of_personorteam_values_when
     eq_(format.kind,PeopleKind.person)
 
 def test_should_suceed_when_to_native_returns_a_list_of_personorteam_values_when_passed_a_list_containing_valid_import_dict_int_and_str_values_and_max_allowed_is_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=1)
     people_list = {'id': 13435, 'kind': 'person'}
@@ -93,7 +93,7 @@ def test_should_suceed_when_to_native_returns_a_list_of_personorteam_values_when
 
 @raises(ConversionError)
 def test_should_suceed_when_to_native_raises_a_conversionerror_when_passed_a_list_containing_invalid_import_dict_and_or_str_values_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=1)
 
@@ -102,7 +102,7 @@ def test_should_suceed_when_to_native_raises_a_conversionerror_when_passed_a_lis
 
 
 def test_should_suceed_when_to_primitive_returns_an_empty_dict_when_passed_in_a_none_and_max_allowed_is_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=1)
 
@@ -114,7 +114,7 @@ def test_should_suceed_when_to_primitive_returns_an_empty_dict_when_passed_in_a_
 
 
 def test_should_suceed_when_to_primitive_returns_an_empty_dict_when_passed_an_empty_list_and_max_allowed_is_not_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=2)
 
@@ -126,7 +126,7 @@ def test_should_suceed_when_to_primitive_returns_an_empty_dict_when_passed_an_em
 
 
 def test_should_suceed_when_to_primitive_returns_export_dict_when_passed_in_a_list_of_personorteam_values_and_max_allowed_is_not_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=2)
 
@@ -141,7 +141,7 @@ def test_should_suceed_when_to_primitive_returns_export_dict_when_passed_in_a_li
 
 
 def test_should_suceed_when_to_primitive_returns_export_dict_when_passed_a_personorteam_value_and_max_allowed_is_1_to_people_type():
-    
+
     # Arrange
     people_type = PeopleType(title='Assignee',max_allowed=1)
 
@@ -167,12 +167,12 @@ def test_should_suceed_when_validate_people_raises_validationerror_when_passed_a
     model.people_value = person_list
 
     # Assert
-    model.validate() 
-   
-    
+    model.validate()
+
+
 @raises(DataError)
 def test_should_suceed_when_validate_people_raises_validateerror_when_passed_a_list_of_personorteam_values_with_len_greater_than_max_allowed_and_max_allowed_is_between_two_and_three_to_people_type():
-    
+
     # Arrange
     class TestModel(MondayModel):
         people_value = PeopleType(title='People',max_allowed=3)

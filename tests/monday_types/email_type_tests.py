@@ -1,10 +1,10 @@
 from schematics.exceptions import ConversionError, DataError, ValidationError
 from nose.tools import eq_,raises
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.models import MondayModel
-from moncli.types import EmailType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.models import MondayModel
+from axanexa_moncli.types import EmailType
 
 
 def test_should_succeed_when_to_native_returns_a_email_when_passing_in_a_emailvalue_value_with_api_data_to_email_type():
@@ -25,7 +25,7 @@ def test_should_succeed_when_to_native_returns_a_email_when_passing_in_a_emailva
 
 
 def test_should_succeed_when_to_native_returns_a_email_when_passed_a_valid_import_dict_to_email_type():
-    
+
     # Arrange
 
     email_type = EmailType(title='email 1')

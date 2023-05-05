@@ -3,7 +3,7 @@ import json
 from schematics.models import Model
 from schematics.types import StringType
 from datetime import datetime
-from moncli.config import DATE_FORMAT, TIME_FORMAT
+from axanexa_moncli.config import DATE_FORMAT, TIME_FORMAT
 
 from .. import api, entities as en, models as m, error as e, column_value as cv
 from ..error import ItemError
@@ -23,7 +23,7 @@ class _Item(Model):
 
 class Item(_Item):
     """An item (table row)
-    
+
         Properties
 
             assets : `list[moncli.entities.Asset]`
@@ -147,7 +147,7 @@ class Item(_Item):
                 self.__column_values.append(cv.create_column_value(column.column_type, settings_str=column.settings_str, **data))
         if updates != None and not self.__updates:
             self.__updates = [en.Update(creds=self.__creds, **update_data) for update_data in updates]
-        if parent_item and not self.__parent_item: 
+        if parent_item and not self.__parent_item:
             self.__parent_item = en.Item(creds=self.__creds, **parent_item)
         if subitems and not self.__subitems:
             self.__subitems = [en.Item(creds = self.__creds, **value) for value in subitems]
@@ -213,14 +213,14 @@ class Item(_Item):
     @property
     def updates(self):
         """The item's updates."""
-        if self.__updates == None: 
+        if self.__updates == None:
             self.__updates = self.get_updates()
         return self.__updates
-    
+
     @property
     def parent_item(self):
         """The parent item ."""
-        if self.__parent_item == None: 
+        if self.__parent_item == None:
             self.__parent_item = self.get_parent_item()
         return self.__parent_item
 
@@ -289,7 +289,7 @@ class Item(_Item):
                     The list asset return fields.
                 kwargs : `dict`
                     Optional keyword arguments for retrieving file assets from an item.
-                
+
             Returns
 
                 assets : `list[moncli.entities.asset.Asset]`
@@ -314,14 +314,14 @@ class Item(_Item):
                 url : `str`
                     The user who uploaded the file
                 url_thumbnail : `str`
-                    Url to view the asset in thumbnail mode. Only available for images.   
+                    Url to view the asset in thumbnail mode. Only available for images.
 
             Optional Arguments
 
                 column_ids : `list[str]`
-                    A list of column IDs from which to retrieve file assets.     
+                    A list of column IDs from which to retrieve file assets.
         """
-        
+
         kwargs = {'ids': [int(self.id)]}
         if column_ids:
             kwargs['assets'] = {'column_ids': column_ids}
@@ -382,7 +382,7 @@ class Item(_Item):
                 updates : `moncli.entities.update.Update`
                     The item's updates.
         """
-        
+
         if (id or title or file_value):
             if id:
                 column_id = id
@@ -598,7 +598,7 @@ class Item(_Item):
             api_key=self.__creds.api_key_v2,
             ids=[int(self.id)])[0]['creator']
         return en.User(creds=self.__creds, **user_data)
-   
+
 
     def get_column_values(self, *args):
         """Get the item's column values.
@@ -629,7 +629,7 @@ class Item(_Item):
                     The column's value in json format.
         """
 
-        # Pulls the columns from the board containing the item and maps 
+        # Pulls the columns from the board containing the item and maps
         # column ID to type.
         columns_map = { column.id: column for column in self.board.columns }
         column_values_data = api.get_items(
@@ -686,7 +686,7 @@ class Item(_Item):
             raise en.board.TooManyGetColumnValueParameters()
         if id is None and title is None:
             raise en.board.NotEnoughGetColumnValueParameters()
-        
+
         if title:
             return self.column_values[title]
 
@@ -823,10 +823,10 @@ class Item(_Item):
 
             Parameters
                 id: str
-                    The ID of the column to be updated.  
+                    The ID of the column to be updated.
                     NOTE: This parameter is mutually exclusive and cannot be used with the 'title' parameter
                 title: str
-                    The title of the column value to be updated. 
+                    The title of the column value to be updated.
                     NOTE: This parameter is mutually exclusive and cannot be used with 'id'.
                 column_value : Type: moncli.entities.column_value.ColumnValue | dict | str
                     The value to be updated for the column.
@@ -872,13 +872,13 @@ class Item(_Item):
                     The item's last update date.
                 updates : `moncli.entities.update.Update`
                     The item's updates.
-            
+
             Optional Arguments
-            
+
                 create_labels_if_missing: `bool`
                     Create Status/Dropdown labels if they're missing. (Requires permission to change board structure).
         """
-        if id and title : 
+        if id and title :
             raise e.ItemError(
                 'change_column_value_too_many_parameters',
                 self.id,
@@ -909,7 +909,7 @@ class Item(_Item):
                     column_value = self.column_values[id]
                 column_id = column_value.id
                 value  = column_value.null_value
-        else: 
+        else:
             raise e.ItemError(
                 'invalid_column_value_entity',
                 self.id,
@@ -948,10 +948,10 @@ class Item(_Item):
             Parameters
 
                 id: str
-                    The id value of the column 
+                    The id value of the column
                 as_model: type
                     The MondayModel subclass to be returned.
-                title: str 
+                title: str
                     The title of the column
                 value: `str`
                     The value to be changed
@@ -993,23 +993,23 @@ class Item(_Item):
                     The item's last update date.
                 updates : `moncli.entities.update.Update`
                     The item's updates.
-            
+
             Optional Arguments
-            
+
                 create_labels_if_missing: `bool`
                     Create Status/Dropdown labels if they're missing. (Requires permission to change board structure).
         """
-        
+
         if not id and not title :
             raise NotEnoughChangeSimpleColumnValueParameters()
         if id and title :
             raise TooManyChangeSimpleColumnValueParameters()
-                
+
         if id:
-            column_value = self.column_values[id]   
+            column_value = self.column_values[id]
         elif title:
             column_value = self.column_values[title]
-        
+
         item_data = api.change_simple_column_value(
             self.id,
             self.board.id,
@@ -1017,7 +1017,7 @@ class Item(_Item):
             value,
             *args,
             api_key=self.__creds.api_key_v2,
-            **kwargs)        
+            **kwargs)
 
         items = Item(creds=self.__creds, **item_data)
         if not as_model:
@@ -1035,7 +1035,7 @@ class Item(_Item):
             Parameters
 
                 column_values : `list[moncli.entities.ColumnValue] / dict`
-                    The column value to update. 
+                    The column value to update.
                     NOTE: This value can either be a list of moncli.entities.ColumnValue objects or a formatted dictionary.
                 get_column_values: `bool`:
                     Retrieves item column values if set to `True`.
@@ -1079,9 +1079,9 @@ class Item(_Item):
                     The item's last update date.
                 updates : `moncli.entities.update.Update`
                     The item's updates.
-            
+
             Optional Arguments
-            
+
                 create_labels_if_missing: `bool`
                     Create Status/Dropdown labels if they're missing. (Requires permission to change board structure).
         """
@@ -1127,7 +1127,7 @@ class Item(_Item):
         """Create subitem.
 
             Parameters
-            
+
                 item_name : `str`
                     The new item's name.
                 as_model: `type`
@@ -1138,12 +1138,12 @@ class Item(_Item):
                     Optional arguments for creating subitems.
 
             Returns
-                        
+
                 subitem : `moncli.entities.Item`
                     The created subitem.
 
             Return Fields
-            
+
                 assets : `list[moncli.entities.Asset]`
                     The item's assets/files.
                 board : `moncli.entities.Board`
@@ -1170,15 +1170,15 @@ class Item(_Item):
                     The item's last update date.
                 updates : `moncli.entities.Update`
                     The item's updates.
-            
+
             Optional Arguments
-            
+
                 column_values : `json`
                     The column values of the new item.
                 create_labels_if_missing: `bool`
                     Create Status/Dropdown labels if they're missing. (Requires permission to change board structure).
         """
-        
+
         subitem_data = api.create_subitem(
             self.id,
             item_name,
@@ -1407,12 +1407,12 @@ class Item(_Item):
                     Optional keyword arguments for duplicating item.
 
             Returns
-                
+
                 item : `moncli.entities.Item`
                     The duplicated item.
 
             Return Fields
-            
+
                 assets : `list[moncli.entities.Asset]`
                     The item's assets/files.
                 board : `moncli.entities.Board`
@@ -1439,7 +1439,7 @@ class Item(_Item):
                     The item's last update date.
                 updates : `moncli.entities.Update`
                     The item's updates.
-            
+
             Optional Arguments
 
                 with_updates : `bool`
@@ -1511,19 +1511,19 @@ class Item(_Item):
         """
 
         update_data = api.create_update(
-            body, 
+            body,
             self.id,
             *args,
-            api_key=self.__creds.api_key_v2, 
+            api_key=self.__creds.api_key_v2,
             **kwargs)
         return en.Update(creds=self.__creds, **update_data)
 
 
     def get_updates(self, *args, **kwargs):
         """Get updates for this item.
- 
+
             Parameters
-    
+
                 args : `tuple`
                     Optional update return fields.
                 kwargs : `dict`
@@ -1564,7 +1564,7 @@ class Item(_Item):
                 page : `int`
                     Page number to get, starting at 1.
         """
-        
+
         limit = kwargs.pop('limit', 25)
         page = kwargs.pop('page', 1)
         updates_data = api.get_items(
@@ -1683,12 +1683,12 @@ class Item(_Item):
         return [as_model(item) for item in items]
 
 
-    
+
     def get_activity_logs(self, *args, **kwargs):
         """Retrieves an item's activity logs.
 
             Parameters
-            
+
                 args : `tuple`
                     The list of activity log return fields.
                 kwargs : `dict`
@@ -1734,7 +1734,7 @@ class Item(_Item):
                     To timespamp (ISO8601).
         """
 
-        
+
         kwargs['item_ids'] = [int(self.id)]
         return self.board.get_activity_logs(*args, **kwargs)
 

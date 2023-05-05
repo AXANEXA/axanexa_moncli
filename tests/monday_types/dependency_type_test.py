@@ -2,13 +2,13 @@ import json
 from schematics.exceptions import ConversionError
 from nose.tools import eq_,raises
 
-from moncli import column_value as cv
-from moncli.enums import ColumnType
-from moncli.types import DependencyType
+from axanexa_moncli import column_value as cv
+from axanexa_moncli.enums import ColumnType
+from axanexa_moncli.types import DependencyType
 
 
 def test_should_succeed_when_to_native_returns_a_list_when_passing_in_a_dependency_value_value_with_api_data_to_dependency_type():
-    
+
     # Arrange
 
     id = "dependency"
@@ -57,11 +57,11 @@ def test_should_succeed_when_to_primitive_returns_empty_dict_when_passed_in_a_no
 
 
 def test_should_succeed_when_to_primitive_returns_export_dict_when_passed_in_a_list_with_int_values_to_dependency_type():
-   
+
     # Arrange
-    
+
     dependency_type = DependencyType(id='dependency')
-    
+
     # Act
     format =  dependency_type.to_primitive([12345, 67890])['item_ids']
 
