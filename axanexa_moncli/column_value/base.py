@@ -55,6 +55,8 @@ class ColumnValue(_ColumnValue):
         if value and value != self.null_value:
             value = json.loads(value)
             self._value = self._convert(value)
+            if not self._value:
+                self._value = copy.deepcopy(self.native_default)
         else:
             self._value = copy.deepcopy(self.native_default)
 

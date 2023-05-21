@@ -17,6 +17,7 @@ class DateValue(ComplexNullValue):
         try:
             new_date = datetime.strptime(value['date'], DATE_FORMAT)
         except (KeyError, ValueError, TypeError):
+            print(value)
             return None
         try:
             new_time = datetime.strptime(value['time'], TIME_FORMAT)
@@ -125,8 +126,14 @@ class EmailValue(ComplexNullValue):
 
     def _convert(self, value):
         try:
+            if 'email' not in value:
+                return None
+            if 'text' not in value:
+                value['text']=None
+
             email = value['email']
             text = value['text']
+
             return Email(email=email, text=text)
         except KeyError:
             raise ColumnValueError('invalid_email_data', self.id, 'Unable to convert "{}" to Email value.'.format(value))
@@ -344,7 +351,11 @@ class PhoneValue(ComplexNullValue):
 
 
     def _convert(self, value):
-        try:
+        try:        
+            if 'phone' not in value:
+                value['phone'] = None
+            if 'countryShortName' not in value:
+                value['countryShortName'] = None
             phone = value['phone']
             code = value['countryShortName']
             return Phone(phone=phone, code=code)
@@ -359,9 +370,15 @@ class PhoneValue(ComplexNullValue):
                 return Phone(phone=phone, code=code)
 
             if isinstance(value, dict):
+                if 'phone' not in value:
+                    value['phone'] = None
+                if 'code' not in value:
+                    value['code'] = None
+
                 phone = value['phone']
                 code = value['code']
                 return Phone(phone=phone, code=code)
+
         except KeyError:
             raise ColumnValueError('invalid_phone_data', self.id, 'Unable to convert "{}" to Phone value.'.format(value))
 
@@ -378,7 +395,12 @@ class StatusValue(ComplexNullValue):
 
     def _convert(self, value):
         settings = self.settings
+        if 'labels' not in value:
+            value['labels'] = None
         labels = settings['labels']
+        #print (value)
+        if 'index' not in value:
+            value['index'] = None
         index = str(value['index'])
         if not self.text and index not in labels:
             return None

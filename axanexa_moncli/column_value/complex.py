@@ -148,8 +148,12 @@ class TimelineValue(ComplexNullValue):
 
     def _convert(self,value):
         try:
-            from_date = datetime.strptime(value['from'], DATE_FORMAT)
-            to_date = datetime.strptime(value['to'], DATE_FORMAT)
+            print(value)
+            if 'from' in value and 'to' in value:
+                if value['from'] is None or value['to'] is None:
+                    return None
+                from_date = datetime.strptime(value['from'], DATE_FORMAT)
+                to_date = datetime.strptime(value['to'], DATE_FORMAT)
         except (KeyError, ValueError):
             return None
         try:
@@ -217,6 +221,7 @@ class WeekValue(ComplexNullValue):
 
 
     def _convert(self, value):
+        print(value)
         try:
             start_date = datetime.strptime(value['week']['startDate'], DATE_FORMAT)
             end_date = datetime.strptime(value['week']['endDate'], DATE_FORMAT)
