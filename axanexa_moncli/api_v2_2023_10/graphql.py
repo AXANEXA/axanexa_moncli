@@ -18,6 +18,7 @@ class ArgumentValueKind(Enum):
     List = 5
     Json = 6
     File = 7
+    Dict = 8
 
 
 class GraphQLNode():
@@ -156,6 +157,43 @@ class GraphQLField(GraphQLNode):
                 self.__children.__setitem__(field.name, field)
 
 
+    def formmat_nested_arguments(values):
+        """Format nested arguments into a query string.
+
+            Parameters
+
+                values : `dict`
+                    The nested arguments to format.
+
+            Returns
+
+                query_string : `str`
+                    The formatted query string.
+        """
+
+        temp_string_list = []
+
+        for key in values:
+            value = values[key]
+            if isinstance(value, str):
+                json_value = json.dumps(value)
+                #value = StringValue(value).format()
+            elif isinstance(value, list):             
+                #temp = JsonValue(value)
+                #value = temp.format()
+                json_value = json.dumps(value)
+            temp = '{}: {}'
+            temp_string_list.append(temp.format(key, json_value))
+
+        if len(temp_string_list) > 0:
+            temp_string = ', '.join(temp_string_list)
+            #add the temp_string to the arguments
+            #wrap the temp_string in curly braces
+            temp_string = '{{{}}}'.format(temp_string)
+            return temp_string
+        else:
+            return None
+
     def add_arguments(self, **kwargs):
         """Add arguments to node.
 
@@ -166,7 +204,36 @@ class GraphQLField(GraphQLNode):
         """
 
         for key, value in kwargs.items():
-            if isinstance(value, ArgumentValue):
+            if isinstance(value, DictValue):
+                #we ahve dictValue meaning we have a nested argument
+                #get the value and cast as dict and loop through keys
+                #and add them as arguments
+                dict_value : DictValue = value
+                dict_value = dict_value.value
+                #build the result into temp_string
+                temp_string_list = []
+                if isinstance(dict_value, list):
+                    #we have a list of dicts
+                    for item in dict_value:
+                        temp_string = GraphQLField.formmat_nested_arguments(item)
+                        if temp_string:
+                            temp_string_list.append(temp_string)
+                    if len(temp_string_list) > 0:
+                        temp_string = ', '.join(temp_string_list)
+                        #add the temp_string to the arguments
+                        #wrap the temp_string in square braces
+                        temp_string = '[{}]'.format(temp_string)
+                        self.arguments.__setitem__(key, temp_string)
+                else:
+                    #we have a single dict
+                    temp_string = GraphQLField.formmat_nested_arguments(dict_value)
+                    if temp_string:
+                        self.arguments.__setitem__(key, temp_string)
+
+
+
+            elif isinstance(value, ArgumentValue):
+                
                 arg_value : ArgumentValue = value
                 formatted_value = arg_value.format()
                 if formatted_value:
@@ -371,6 +438,14 @@ class JsonValue(ArgumentValue):
         return json.dumps(json.dumps(self.value))
 
 
+class DictValue(ArgumentValue):
+    """GraphQL json argument type and format."""
+    def __init__(self, value):
+        super(DictValue, self).__init__(value)
+
+    def format(self):
+        return json.dumps(json.dumps(self.value))
+    
 class FileValue(ArgumentValue):
     """GraphQL file argument type and format."""
     def __init__(self, value):

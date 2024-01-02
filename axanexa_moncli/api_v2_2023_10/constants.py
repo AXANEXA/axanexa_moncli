@@ -3,6 +3,8 @@ from .graphql import ArgumentValueKind
 # API Configurations
 API_V2_ENDPOINT = 'https://api.monday.com/v2'
 API_V2_FILE_ENDPOINT = 'https://api.monday.com/v2/file'
+API_VERSION = '2023-10'
+
 
 # Operation methods
 # Boards
@@ -22,8 +24,12 @@ DUPLICATE_GROUP = 'duplicate_group'
 CREATE_GROUP = 'create_group'
 ARCHIVE_GROUP = 'archive_group'
 DELETE_GROUP = 'delete_group'
+
 # New items_page constants
 ITEMS_PAGE = 'items_page'
+NEXT_ITEMS_PAGE = 'next_items_page'
+
+ITEMS = 'items'
 CURSOR = 'cursor'
 LIMIT = 'limit'
 QUERY_PARAMS = 'query_params'
@@ -32,6 +38,8 @@ ORDER_BY = 'order_by'
 RULES = 'rules'
 COMPARE_VALUE = 'compare_value'
 COLUMN_ID = 'column_id'
+ITEMS_PAGE_BY_COLUMN_VALUES = 'items_page_by_column_values'
+NEXT_ITEMS_PAGE_BY_COLUMN_VALUES = 'next_items_page_by_column_values'
 ITEMS_BY_COLUMN_VALUES = 'items_by_column_values'
 ITEMS_BY_MULTIPLE_COLUMN_VALUES = 'items_by_multiple_column_values'
 CREATE_ITEM = 'create_item'
@@ -92,7 +100,7 @@ DEFAULT_BOARD_QUERY_FIELDS = [
     'communication',
     'description',
     'permissions',
-    'pos',
+ #   'pos',
     'state',
     'workspace_id',
     'updated_at'
@@ -123,6 +131,25 @@ DEFAULT_COLUMN_QUERY_FIELDS = [
     'type',
     'width'
 ]
+DEFAULT_ITEM_PAGE_QUERY_FIELDS = [
+    'cursor',
+    'items.id',
+    'items.name',
+    'items.created_at',
+    'items.creator_id',
+    'items.updated_at',
+    'items.state'
+]
+
+DEFAULT_NEXT_ITEM_PAGE_QUERY_FIELDS = [
+    'cursor',
+    'items.id',
+    'items.name',
+    'items.created_at',
+    'items.creator_id',
+    'items.updated_at',
+    'items.state'
+]
 
 DEFAULT_ITEM_QUERY_FIELDS = [
     'id',
@@ -142,12 +169,26 @@ DEFAULT_GROUP_QUERY_FIELDS = [
     'position'
 ]
 
+DEFAULT_ITEM_PAGE_COLUMN_VALUE_QUERY_FIELDS = [
+    'cursor',
+    'items.id',
+    'items.name'
+]
+
+DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS = [
+    'cursor',
+    'items.id',
+    'items.name'
+]
+
+
 DEFAULT_COLUMN_VALUE_QUERY_FIELDS = [
     'id',
-    'title',
     'text',
     'value',
-    'additional_info'
+    'type',
+    'column.id',
+    'column.title',
 ]
 
 DEFAULT_TAG_QUERY_FIELDS = [
@@ -259,6 +300,7 @@ FIELD_MAP = {
     'creator': DEFAULT_USER_QUERY_FIELDS,
     'group': DEFAULT_GROUP_QUERY_FIELDS,
     'groups': DEFAULT_GROUP_QUERY_FIELDS,
+    'items_page' : DEFAULT_ITEM_PAGE_QUERY_FIELDS,
     'items': DEFAULT_ITEM_QUERY_FIELDS,
     'owner': DEFAULT_USER_QUERY_FIELDS,
     'replies': DEFAULT_REPLY_QUERY_FIELDS,
@@ -305,11 +347,23 @@ QUERY_MAP = {
                     'page': ArgumentValueKind.Int
                 }
             },
-            'items': {
-                'ids': (ArgumentValueKind.List, ArgumentValueKind.Int),
+            # venkat changes for items_page
+            'items_page':{
+                'cursor': ArgumentValueKind.String,
                 'limit': ArgumentValueKind.Int,
-                'page': ArgumentValueKind.Int
+            
+                'items': {
+                 'ids': (ArgumentValueKind.List, ArgumentValueKind.Int)
+                 #'limit': ArgumentValueKind.Int
+                 #'page': ArgumentValueKind.Int - todo add query_params
+             }
             },
+
+            'items': {
+                 'ids': (ArgumentValueKind.List, ArgumentValueKind.Int),
+                 'limit': ArgumentValueKind.Int,
+                 'page': ArgumentValueKind.Int
+             },
             'order_by': ArgumentValueKind.Enum,
             'updates': {
                 'limit': ArgumentValueKind.Int,
@@ -366,6 +420,21 @@ QUERY_MAP = {
     CREATE_GROUP: (DEFAULT_GROUP_QUERY_FIELDS, {}),
     ARCHIVE_GROUP: (DEFAULT_GROUP_QUERY_FIELDS, {}),
     DELETE_GROUP: (DEFAULT_GROUP_QUERY_FIELDS, {}),
+
+    ITEMS_PAGE: (
+        DEFAULT_ITEM_PAGE_QUERY_FIELDS,
+        {
+            'limit': ArgumentValueKind.Int,
+            'cursor': ArgumentValueKind.String
+           
+        }),
+    NEXT_ITEMS_PAGE: (
+        DEFAULT_NEXT_ITEM_PAGE_QUERY_FIELDS,
+        {
+            'limit': ArgumentValueKind.Int,
+            'cursor': ArgumentValueKind.String
+            
+        }),
     ITEMS: (
         DEFAULT_ITEM_QUERY_FIELDS,
         {
@@ -383,6 +452,27 @@ QUERY_MAP = {
                 'limit': ArgumentValueKind.Int,
                 'page': ArgumentValueKind.Int
             }
+        }),
+    ITEMS_PAGE_BY_COLUMN_VALUES: (
+        DEFAULT_ITEM_QUERY_FIELDS,
+        {
+            'limit': ArgumentValueKind.Int,
+            'cursor': ArgumentValueKind.String,
+            'columns': [
+                {
+                #'column_id': ArgumentValueKind.String,
+               # 'column_values': (ArgumentValueKind.List, ArgumentValueKind.String)
+
+                }
+            ]
+        }),
+    NEXT_ITEMS_PAGE_BY_COLUMN_VALUES: (
+        DEFAULT_ITEM_QUERY_FIELDS,
+        {
+            'limit': ArgumentValueKind.Int,
+            'cursor': ArgumentValueKind.String
+            
+            
         }),
     ITEMS_BY_COLUMN_VALUES: (
         DEFAULT_ITEM_QUERY_FIELDS,
