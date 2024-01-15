@@ -45,5 +45,7 @@ def convert_dicts(input_dict):
         result_dict['title'] = input_dict['column']['title']
     if 'description' in input_dict:
         result_dict['description'] = input_dict['description']
-
+    if 'display_value' in input_dict:
+        result_dict['display_value'] = input_dict['display_value']
+        result_dict['text'] = input_dict['display_value']
     return result_dict

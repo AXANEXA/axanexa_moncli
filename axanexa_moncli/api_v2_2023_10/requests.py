@@ -3,6 +3,7 @@ import requests, json, time
 from . import MondayApiError
 from .graphql import *
 from .constants import *
+import re
 
 def execute_query(timeout: int = None, **kwargs):
     """Executes a graphql query via Rest.

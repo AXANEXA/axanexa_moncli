@@ -1,4 +1,5 @@
 import json
+import re
 from enum import Enum 
 
 
@@ -118,15 +119,28 @@ class GraphQLField(GraphQLNode):
         """
 
         for field in args:
-
+            #print("field",field)
             if not field or field == '':
                 continue
             
             if type(field) is str:
-                field_split = field.split('.')
-                parent_field = field_split[0]
-                child_fields = field_split[1:]
-                
+                if not '...' in field:
+                    field_split = field.split('.')
+                    parent_field = field_split[0]
+                    child_fields = field_split[1:]
+                #todo
+                else:
+                    field = field.replace('...','3DOTS')
+                    print("field",field)
+                    field_split = field.split('.')
+                    print("dot3_result",field_split)
+                    parent_field = field_split[0]
+                    #if '...' in parent_field:
+                    #    parent_field = parent_field.replace('3DOTS','...')
+                    child_fields = field_split[1:] 
+                    #modified_child_list = [string.replace('3DOTS','...') for string in child_fields]
+                    #child_fields = modified_child_list
+                    
                 if not child_fields:
                     field_group = [[]]
                 # Check for list notation.
@@ -303,8 +317,14 @@ class GraphQLField(GraphQLNode):
                     The amended GraphQL query string.
 
         """
-
+        #print("body",body)
+        #for child in self.__children.values():
+            #print("child.names",child.name)
+            #print("child.values",child.__children.values())
+            #print("child.format_body",child.format_body())
+        
         formatted_children = ', '.join([child.format_body() for child in self.__children.values()])
+        formatted_children = formatted_children.replace('3DOTS','...')
         return '{} {{ {} }}'.format(body, formatted_children)
 
 

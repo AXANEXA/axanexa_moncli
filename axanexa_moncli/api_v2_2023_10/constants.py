@@ -189,7 +189,10 @@ DEFAULT_COLUMN_VALUE_QUERY_FIELDS = [
     'type',
     'column.id',
     'column.title',
+    '3DOTSon MirrorValue.display_value',
+    '3DOTSon BoardRelationValue.display_value'
 ]
+
 
 DEFAULT_TAG_QUERY_FIELDS = [
     'id',
@@ -426,6 +429,9 @@ QUERY_MAP = {
         {
             'limit': ArgumentValueKind.Int,
             'cursor': ArgumentValueKind.String
+            # todo 'query_params': {
+             #   'rules': (ArgumentValueKind.List, ArgumentValueKind.Default)
+            #}
            
         }),
     NEXT_ITEMS_PAGE: (

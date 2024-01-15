@@ -31,5 +31,6 @@ COLUMN_TYPE_VALUE_MAPPINGS = {
     ColumnType.week: 'WeekValue',
     ColumnType.file: 'FileValue',
     ColumnType.board_relation : 'ItemLinkValue',
-    ColumnType.subitems : 'SubitemsValue'
+    ColumnType.subitems : 'SubitemsValue',
+    ColumnType.mirror : 'MirrorValue'
 }

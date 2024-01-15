@@ -271,3 +271,16 @@ class DependencyValue(ComplexNullValue):
                     self.id,
                     'Invalid item ID "{}".'.format(id))
         return {'item_ids': return_list }
+
+
+
+class MirrorValue(ComplexNullValue):
+    """A timezone column value."""
+    native_type = str
+
+    def _convert(self, value):
+        return value['display_value']
+
+    def _format(self):
+        return {'text': self.value}
+

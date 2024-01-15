@@ -29,7 +29,8 @@ COLUMN_TYPE_MAPPINGS = {
     'file': ColumnType.file,
     'board_relation': ColumnType.board_relation,
     'subtasks': ColumnType.subitems,
-    'creation_log': ColumnType.creation_log
+    'creation_log': ColumnType.creation_log,
+    'mirror': ColumnType.mirror
 }
 
 

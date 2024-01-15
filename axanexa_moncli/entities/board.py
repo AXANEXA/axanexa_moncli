@@ -1088,12 +1088,23 @@ class Board(_Board):
  
         if get_column_values:
             args = list(args)
+            print(args)
+            #if(len(args) == 0):
             for arg in ['items.column_values.{}'.format(arg) for arg in api.DEFAULT_COLUMN_VALUE_QUERY_FIELDS]:
                 if arg not in args:
                     args.append(arg)
             args.extend(['items.id', 'items.name'])
+            #else:
+              #  for index in range(len(args)):
+               #     arg = args[index]
+                #    print(arg)
+                 #   prefixed_cv = 'items.column_values.{}'.format(arg)
+                  #  args[index]= prefixed_cv
+
+            cv_args = list(args) # used in next page
             args = api.get_field_list(api.DEFAULT_ITEM_PAGE_QUERY_FIELDS, 'items_page', *args)
             args.extend(['items_page.cursor'])
+            
         else:
            # args = api.get_field_list(api.DEFAULT_ITEM_QUERY_FIELDS, 'items', *args)
             #args = item_kwargs
@@ -1113,9 +1124,13 @@ class Board(_Board):
         print(cursor)
         items_data = items_page_data.get('items')
         args.clear()
-        args = api.get_field_list(api.DEFAULT_ITEM_PAGE_QUERY_FIELDS, None, *args)
+        if cv_args:
+            args = cv_args
+        else:
+            args = api.get_field_list(api.DEFAULT_ITEM_PAGE_QUERY_FIELDS, None, *args)
         next_items_page_kwargs = item_kwargs['items_page']
         page = 1
+        #totdo nextpage item{} fix
         while cursor and (max_pages is None or page < max_pages):
             print("cursor is there")
         #   loop next_items_page
@@ -1125,7 +1140,7 @@ class Board(_Board):
             print("New Cursor= "+str(cursor))
 
             items_data.extend(next_items_page_data.get('items'))
-            print("items size= "+str(items_data.__len__()))
+            #print("items size= "+str(items_data.__len__()))
         
 
         #items_page = 
@@ -1142,13 +1157,11 @@ class Board(_Board):
         return [as_model(item) for item in items]
  
 
-
-    def get_items_by_column_values(self, column_id :str,column_values : list, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
+    def get_items_by_column_values(self, column_value: cv.ColumnValue, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
         """Search items in this board by their column values.
     
             Parameters
-
-                column_value : `moncli.entites.ColumnValue`
+               column_value : `moncli.entites.ColumnValue` # venkat these param changed in 2023_10
                     The column value to search on.
                 get_column_values: `bool`
                     Flag used to include column values with the returned items.
@@ -1208,7 +1221,7 @@ class Board(_Board):
                 state : `moncli.enumns.State`
                     The state of the item (all / active / archived / deleted), the default is active.
         """
-        #extract limit from kwargs if exist, else default to 100
+        #extract limit from kwargs if exist
         max_pages = None
         if 'max_pages' in kwargs:
             max_pages= kwargs.pop('max_pages')
@@ -1224,7 +1237,141 @@ class Board(_Board):
                 if arg not in args:
                     args.append(arg)
  
-        print(args)
+        print(args)        
+        if isinstance(column_value, cv.DateValue):
+            value = column_value.date
+        elif isinstance(column_value, cv.StatusValue):
+            value = column_value.label
+        elif isinstance(column_value, cv.StatusValue):
+            value = column_value.label
+        else:
+            value = column_value.text.format()
+
+        print(value)   
+        column_id = column_value.id
+        column_values = [value]
+        print(column_values)   
+
+        items_page_data = api.get_items_by_column_values(
+            self.id, 
+            column_id, 
+            column_values, 
+            *args,
+            api_key=self.__creds.api_key_v2, 
+            **item_kwargs)
+        
+        cursor = items_page_data.get('cursor')
+        print("cget_items_by_column_values ursor is there")
+        print(cursor)
+        items_data = items_page_data.get('items')
+        args.clear()
+        args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
+        next_items_page_kwargs = item_kwargs
+        page = 1
+        while cursor and (max_pages is None or page < max_pages):
+            print("cget_items_by_column_values ursor is there - in while")
+        #   loop next_items_page
+            page+=1
+            next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
+            cursor = next_items_page_data.get('cursor')
+            cursor = None
+            print("New Cursor= "+str(cursor))
+            items_data.extend(next_items_page_data.get('items'))
+        
+        #print("items size= "+str(items_data.__len__()))
+        items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
+        if not as_model:
+            return items
+        if not issubclass(type(as_model), MondayModel):
+            raise BoardError(
+                'invalid_as_model_parameter',
+                self.id,
+                'as_model parameter must be of MondayModel Type')
+        return [as_model(item) for item in items]
+
+
+    def get_items_page_by_column_values(self, column_id :str,column_values : list, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
+        """Search items in this board by their column values.
+    
+            Parameters
+                column_id : Str column id 
+               column_values : 'List` of String containing column values  # venkat these param changed in 2023_10
+                    The column value to search on.
+                get_column_values: `bool`
+                    Flag used to include column values with the returned items.
+                as_model: `type`
+                    The MondayModel subclass to be returned.
+                args : `tuple`
+                    The list of item return fields.
+                kwargs : `dict`
+                    The optional keyword arguments for searching items.
+        
+            Returns
+
+                items : `list[moncli.entities.Item]`
+                    The board's queried items.
+        
+            Return Fields
+
+                assets : `list[moncli.entities.Asset]`
+                    The item's assets/files.
+                board : `moncli.entities.Board`
+                    The board that contains this item.
+                column_values : `list[moncli.entities.ColumnValue]`
+                    The item's column values.
+                created_at : `str`
+                    The item's create date.
+                creator : `moncli.entities.User`
+                    The item's creator.
+                creator_id : `str`
+                    The item's unique identifier.
+                group : `moncli.entities.Group`
+                    The group that contains this item.
+                id : `str`
+                    The item's unique identifier.
+                name : `str`
+                    The item's name.
+                state : `str`
+                    The board's state (all / active / archived / deleted)
+                subscriber : `moncli.entities.User`
+                    The pulse's subscribers.
+                updated_at : `str`
+                    The item's last update date.
+                updates : `moncli.entities.Update`
+                    The item's updates.
+            
+            Optional Arguments
+
+                limit : `int`
+                    Number of items to get.
+                page : `int`
+                    Page number to get, starting at 1.
+                column_id : `str`
+                    The column's unique identifier.
+                column_value : `str`
+                    The column value to search items by.
+                column_type : `str`
+                    The column type.
+                state : `moncli.enumns.State`
+                    The state of the item (all / active / archived / deleted), the default is active.
+        """
+        #extract limit from kwargs if exist
+        max_pages = None
+        if 'max_pages' in kwargs:
+            max_pages= kwargs.pop('max_pages')
+
+        item_kwargs = {}
+        if kwargs:
+           # item_kwargs['items'] = kwargs
+            item_kwargs['limit'] = kwargs.pop('limit', 100)
+        
+        if get_column_values:
+            args = list(args)
+            for arg in ['{}'.format(arg) for arg in api.DEFAULT_ITEM_PAGE_COLUMN_VALUE_QUERY_FIELDS]:
+                if arg not in args:
+                    args.append(arg)
+ 
+        #print(args)
         """ todo
         if isinstance(column_value, cv.DateValue):
             value = column_value.date
@@ -1255,18 +1402,15 @@ class Board(_Board):
         args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
         next_items_page_kwargs = item_kwargs
         page = 1
-        while cursor and (max_pages is None or page < max_pages):
-            print("cget_items_by_column_values ursor is there - in while")
+        while cursor and (max_pages is None or (page < max_pages)):
+            #print("cget_items_by_column_values ursor is there - in while")
         #   loop next_items_page
             page+=1
             next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
-            cursor = None
             print("New Cursor= "+str(cursor))
-
-            #items_data.extend(next_items_page_data.get('items'))
-            print("items size= "+str(items_data.__len__()))
-
+            items_data.extend(next_items_page_data.get('items'))
+       # print("items size= "+str(items_data.__len__()))
         items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
         if not as_model:
             return items
@@ -1278,7 +1422,137 @@ class Board(_Board):
         return [as_model(item) for item in items]
 
 
+    def get_items_page_by_multi_column_values(self, columns : list, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
+        """Search items in this board by their column values.
     
+            Parameters
+                column_id : Str column id 
+               column_values : 'List` of String containing column values  # venkat these param changed in 2023_10
+                    The column value to search on.
+                get_column_values: `bool`
+                    Flag used to include column values with the returned items.
+                as_model: `type`
+                    The MondayModel subclass to be returned.
+                args : `tuple`
+                    The list of item return fields.
+                kwargs : `dict`
+                    The optional keyword arguments for searching items.
+        
+            Returns
+
+                items : `list[moncli.entities.Item]`
+                    The board's queried items.
+        
+            Return Fields
+
+                assets : `list[moncli.entities.Asset]`
+                    The item's assets/files.
+                board : `moncli.entities.Board`
+                    The board that contains this item.
+                column_values : `list[moncli.entities.ColumnValue]`
+                    The item's column values.
+                created_at : `str`
+                    The item's create date.
+                creator : `moncli.entities.User`
+                    The item's creator.
+                creator_id : `str`
+                    The item's unique identifier.
+                group : `moncli.entities.Group`
+                    The group that contains this item.
+                id : `str`
+                    The item's unique identifier.
+                name : `str`
+                    The item's name.
+                state : `str`
+                    The board's state (all / active / archived / deleted)
+                subscriber : `moncli.entities.User`
+                    The pulse's subscribers.
+                updated_at : `str`
+                    The item's last update date.
+                updates : `moncli.entities.Update`
+                    The item's updates.
+            
+            Optional Arguments
+
+                limit : `int`
+                    Number of items to get.
+                page : `int`
+                    Page number to get, starting at 1.
+                column_id : `str`
+                    The column's unique identifier.
+                column_value : `str`
+                    The column value to search items by.
+                column_type : `str`
+                    The column type.
+                state : `moncli.enumns.State`
+                    The state of the item (all / active / archived / deleted), the default is active.
+        """
+        #extract limit from kwargs if exist
+        max_pages = None
+        if 'max_pages' in kwargs:
+            max_pages= kwargs.pop('max_pages')
+
+        item_kwargs = {}
+        if kwargs:
+           # item_kwargs['items'] = kwargs
+            item_kwargs['limit'] = kwargs.pop('limit', 100)
+        
+        if get_column_values:
+            args = list(args)
+            for arg in ['{}'.format(arg) for arg in api.DEFAULT_ITEM_PAGE_COLUMN_VALUE_QUERY_FIELDS]:
+                if arg not in args:
+                    args.append(arg)
+ 
+        #print(args)
+        """ todo
+        if isinstance(column_value, cv.DateValue):
+            value = column_value.date
+        elif isinstance(column_value, cv.StatusValue):
+            value = column_value.label
+        else:
+            value = column_value.format()
+"""     #todo
+        #column = self.get_column(id=column_id)
+        #if column.column_type == ColumnType.numbers:
+        #    value = [str(value) for value in column_values]
+        #else:
+        #    value = column_values
+
+        items_page_data = api.get_items_page_by_multi_column_values(
+            self.id, 
+            columns, 
+            *args,
+            api_key=self.__creds.api_key_v2, 
+            **item_kwargs)
+        
+        cursor = items_page_data.get('cursor')
+        print("cget_items_by_column_values ursor is there")
+        print(cursor)
+        items_data = items_page_data.get('items')
+        args.clear()
+        args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
+        next_items_page_kwargs = item_kwargs
+        page = 1
+        while cursor and (max_pages is None or (page < max_pages)):
+            #print("cget_items_by_column_values ursor is there - in while")
+        #   loop next_items_page
+            page+=1
+            next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
+            cursor = next_items_page_data.get('cursor')
+            print("New Cursor= "+str(cursor))
+            items_data.extend(next_items_page_data.get('items'))
+       # print("items size= "+str(items_data.__len__()))
+        items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
+        if not as_model:
+            return items
+        if not issubclass(type(as_model), MondayModel):
+            raise BoardError(
+                'invalid_as_model_parameter',
+                self.id,
+                'as_model parameter must be of MondayModel Type')
+        return [as_model(item) for item in items]
+
+
     def get_items_by_multiple_column_values(self, column: en.Column, column_values: list, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
         """Search items in this board by their column values.
     
@@ -1346,26 +1620,63 @@ class Board(_Board):
                 state : `moncli.enumns.State`
                     The state of the item (all / active / archived / deleted), the default is active.
         """
+
+
+        
+        #extract limit from kwargs if exist,
+        max_pages = None
+        if 'max_pages' in kwargs:
+            max_pages= kwargs.pop('max_pages',100)
+
+        item_kwargs = {}
+        if kwargs:
+           # item_kwargs['items'] = kwargs
+            item_kwargs['limit'] = kwargs.pop('limit', 100)
+        
         if get_column_values:
             args = list(args)
-            for arg in ['column_values.{}'.format(arg) for arg in api.DEFAULT_COLUMN_VALUE_QUERY_FIELDS]:
+            for arg in ['{}'.format(arg) for arg in api.DEFAULT_ITEM_PAGE_COLUMN_VALUE_QUERY_FIELDS]:
                 if arg not in args:
                     args.append(arg)
-            args.extend(['id', 'name'])
-
+ 
+        print(args)    
         if column.column_type == ColumnType.numbers:
             value = [str(value) for value in column_values]
         else:
             value = column_values
+            
+        
+        print(value)   
+        column_id = column.id
+        column_values = value
+        print(column_values)   
 
-        items_data = api.get_items_by_multiple_column_values(
+        items_page_data = api.get_items_by_column_values(
             self.id, 
-            column.id, 
-            value, 
+            column_id, 
+            column_values, 
             *args,
             api_key=self.__creds.api_key_v2, 
-            **kwargs)
-
+            **item_kwargs)
+        
+        cursor = items_page_data.get('cursor')
+        print("cget_items_by_column_mutli values ursor is there------")
+        print(cursor)
+        items_data = items_page_data.get('items')
+        args.clear()
+        args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
+        next_items_page_kwargs = item_kwargs
+        page = 1
+        while cursor and (max_pages is None or page < max_pages):
+            print("cget_items_by_column_values ursor is there - in while")
+        #   loop next_items_page
+            page+=1
+            next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
+            cursor = next_items_page_data.get('cursor')
+            print("New Cursor= "+str(cursor))
+            items_data.extend(next_items_page_data.get('items'))
+        
+        print("items size= "+str(items_data.__len__()))
         items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
         if not as_model:
             return items
