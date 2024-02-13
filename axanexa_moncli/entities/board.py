@@ -1076,6 +1076,7 @@ class Board(_Board):
         """
         #extract limit from kwargs if exist, else default to 100
         max_pages = None
+        cv_args = None
         if 'max_pages' in kwargs:
             max_pages= kwargs.pop('max_pages')
 
