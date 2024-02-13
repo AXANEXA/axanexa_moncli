@@ -166,7 +166,29 @@ def get_boards(*args, **kwargs) -> List[Dict[str, Any]]:
             order_by : `moncli.enums.BoardsOrderBy`
                 The order in which to retrieve your boards (created_at / used_at).       
     """
-    
+   
+ 
+    print ("hello v2023_10")
+    """
+    #check args to see if we have anything items.X if so then we need to deal with the query differently
+
+ 
+    if is_get_items: # this wrong
+        print("board.getItems call found")
+        #issue initial query based on items_page
+        temp_result = execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
+        print(temp_result)
+        return temp_result
+        '''
+        items_results = temp_result['items_page']['items']
+        #check if cursor exists
+        while cursor is not None:
+            #issue subsequent query based on items_page
+                temp_results_page=execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)                  
+                items_results.append(temp_results_page['next_items_page']['items'])
+        return items_results
+        '''
+    """
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)  
 
 
@@ -1073,6 +1095,74 @@ def create_subitem(parent_item_id: str, item_name: str, *args, **kwargs):
     kwargs['item_name'] = gql.StringValue(item_name)
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=CREATE_SUBITEM, operation_type=gql.OperationType.MUTATION, fields=args, arguments=kwargs)
 
+## Venkat added for next_item_page
+def get_next_items_page(*args, **kwargs):
+    """Get a collection of items.
+
+        Parameters
+        
+            args : `tuple`
+                The list of item return fields.
+            kwargs : `dict`
+                Optional arguments for querying items.
+
+        Returns
+            
+            data : `dict`
+                A monday.com column in item form.
+
+        Return Fields
+        
+            assets : `list[moncli.entities.Asset]`
+                The item's assets/files.
+            board : `moncli.entities.Board`
+                The board that contains this item.
+            column_values : `list[moncli.entities.ColumnValue]`
+                The item's column values.
+            created_at : `str`
+                The item's create date.
+            creator : `moncli.entities.User`
+                The item's creator.
+            creator_id : `str`
+                The item's unique identifier.
+            group : `moncli.entities.Group`
+                The group that contains this item.
+            id : `str`
+                The item's unique identifier.
+            name : `str`
+                The item's name.
+            state : `str`
+                The board's state (all / active / archived / deleted)
+            subscriber : `moncli.entities.User`
+                The pulse's subscribers.
+            updated_at : `str`
+                The item's last update date.
+            updates : `moncli.entities.Update`
+                The item's updates.
+
+        Optional Arguments
+        
+            api_key : `str`
+                The monday.com v2 API user key.
+            limit : `int`
+                Number of items to get; the default is 25.
+            page : `int`
+                Page number to get, starting at 1.
+            ids : `list[str]`
+                A list of items unique identifiers.
+            mewest_first : `bool`
+                Get the recently created items at the top of the list.
+    """
+    # venkat tracing undo later
+    print('NEXT_ITEMS_PAGE=')
+    print(ITEMS) 
+    print('args=')
+    print(args)
+    print('kwargs=')
+    print(kwargs)
+    
+    return execute_query(api_key=kwargs.pop('api_key', None), query_name=NEXT_ITEMS_PAGE, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
+
 
 def get_items(*args, **kwargs):
     """Get a collection of items.
@@ -1131,11 +1221,18 @@ def get_items(*args, **kwargs):
             mewest_first : `bool`
                 Get the recently created items at the top of the list.
     """
-    
+    # venkat tracing undo later
+    print('items=')
+    print(ITEMS) 
+    print('args=')
+    print(args)
+    print('kwargs=')
+    print(kwargs)
+
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=ITEMS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
 
 
-def get_items_by_column_values(board_id: str, column_id: str, column_value: str, *args, **kwargs):
+def get_items_by_column_values(board_id: str, columnId: str, columnValues: List,*args, **kwargs):
     """Search items by a value for a single column.
 
         Parameters
@@ -1198,11 +1295,156 @@ def get_items_by_column_values(board_id: str, column_id: str, column_value: str,
             state : `moncli.enums.State`
                 The state of the item (all / active / archived / deleted); the default is active.
     """
-    
+   
+    column = {'column_id': columnId, 'column_values': columnValues}
+    columns = [column]
     kwargs['board_id'] = gql.IntValue(board_id)
-    kwargs['column_id'] = gql.StringValue(column_id)
-    kwargs['column_value'] = gql.StringValue(column_value)
-    return execute_query(api_key=kwargs.pop('api_key', None), query_name=ITEMS_BY_COLUMN_VALUES, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
+    kwargs['columns'] = gql.DictValue(columns)
+
+    return execute_query(api_key=kwargs.pop('api_key', None), query_name=ITEMS_PAGE_BY_COLUMN_VALUES, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
+
+def get_items_page_by_multi_column_values(board_id: str, columns: List,*args, **kwargs):
+    """Search items by a value for a single column.
+
+        Parameters
+        
+            board_id : `str`
+                The board's unique identifier.
+            column_id : `str`
+                The column's unique identifier.
+            column_value `str`
+                The column value to search items by.
+            args : `tuple`
+                The list of item return fields.
+            kwargs : `dict`
+                Optional arguments for querying items by column value.
+
+        Returns
+            
+            data : `dict`
+                A monday.com column in item form.
+
+        Return Fields
+        
+            assets : `list[moncli.entities.Asset]`
+                The item's assets/files.
+            board : `moncli.entities.Board`
+                The board that contains this item.
+            column_values : `list[moncli.entities.ColumnValue]`
+                The item's column values.
+            created_at : `str`
+                The item's create date.
+            creator : `moncli.entities.User`
+                The item's creator.
+            creator_id : `str`
+                The item's unique identifier.
+            group : `moncli.entities.Group`
+                The group that contains this item.
+            id : `str`
+                The item's unique identifier.
+            name : `str`
+                The item's name.
+            state : `str`
+                The board's state (all / active / archived / deleted)
+            subscriber : `moncli.entities.User`
+                The pulse's subscribers.
+            updated_at : `str`
+                The item's last update date.
+            updates : `moncli.entities.Update`
+                The item's updates.
+
+         Optional Arguments
+
+            api_key : `str`
+                The monday.com v2 API user key.
+            limit : `int`
+                Number of items to get.
+            page : `int`
+                Page number to get, starting at 1.
+            column_type : `str`
+                The column type.
+            state : `moncli.enums.State`
+                The state of the item (all / active / archived / deleted); the default is active.
+    """
+   
+    #column = {'column_id': columnId, 'column_values': columnValues}
+    #columns = [column]
+    kwargs['board_id'] = gql.IntValue(board_id)
+    kwargs['columns'] = gql.DictValue(columns)
+
+    return execute_query(api_key=kwargs.pop('api_key', None), query_name=ITEMS_PAGE_BY_COLUMN_VALUES, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
+
+
+def get_next_items_page_by_column_values(board_id: str, columnId: str, columnValues: List,*args, **kwargs):
+    """Search items by a value for a single column.
+
+        Parameters
+        
+            board_id : `str`
+                The board's unique identifier.
+            column_id : `str`
+                The column's unique identifier.
+            column_value `str`
+                The column value to search items by.
+            args : `tuple`
+                The list of item return fields.
+            kwargs : `dict`
+                Optional arguments for querying items by column value.
+
+        Returns
+            
+            data : `dict`
+                A monday.com column in item form.
+
+        Return Fields
+        
+            assets : `list[moncli.entities.Asset]`
+                The item's assets/files.
+            board : `moncli.entities.Board`
+                The board that contains this item.
+            column_values : `list[moncli.entities.ColumnValue]`
+                The item's column values.
+            created_at : `str`
+                The item's create date.
+            creator : `moncli.entities.User`
+                The item's creator.
+            creator_id : `str`
+                The item's unique identifier.
+            group : `moncli.entities.Group`
+                The group that contains this item.
+            id : `str`
+                The item's unique identifier.
+            name : `str`
+                The item's name.
+            state : `str`
+                The board's state (all / active / archived / deleted)
+            subscriber : `moncli.entities.User`
+                The pulse's subscribers.
+            updated_at : `str`
+                The item's last update date.
+            updates : `moncli.entities.Update`
+                The item's updates.
+
+         Optional Arguments
+
+            api_key : `str`
+                The monday.com v2 API user key.
+            limit : `int`
+                Number of items to get.
+            page : `int`
+                Page number to get, starting at 1.
+            column_type : `str`
+                The column type.
+            state : `moncli.enums.State`
+                The state of the item (all / active / archived / deleted); the default is active.
+    """
+   
+    #column = {'column_id': columnId, 'column_values': columnValues}
+    #columns = [column]
+   # kwargs['board_id'] = gql.IntValue(board_id)
+   # kwargs['columns'] = gql.DictValue(columns)
+
+    return execute_query(api_key=kwargs.pop('api_key', None), query_name=NEXT_ITEMS_PAGE, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
 
 
 def get_items_by_multiple_column_values(board_id: str, column_id: str, column_value: list, *args, **kwargs):

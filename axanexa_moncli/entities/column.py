@@ -3,7 +3,7 @@ from ..enums import *
 
 ## Column type mappings
 COLUMN_TYPE_MAPPINGS = {
-    'boolean': ColumnType.checkbox,
+    'checkbox': ColumnType.checkbox,
     'country': ColumnType.country,
     'date': ColumnType.date,
     'dropdown': ColumnType.dropdown,
@@ -12,24 +12,25 @@ COLUMN_TYPE_MAPPINGS = {
     'hour': ColumnType.hour,
     'link': ColumnType.link,
     'location': ColumnType.location,
-    'long-text': ColumnType.long_text,
+    'long_text': ColumnType.long_text,
     'name': ColumnType.name,
-    'numeric': ColumnType.numbers,
-    'multiple-person': ColumnType.people,
+    'numbers': ColumnType.numbers,
+    'people': ColumnType.people,
     'phone': ColumnType.phone,
-    'pulse-updated': ColumnType.last_updated,
+    'last_updated': ColumnType.last_updated,
     'rating': ColumnType.rating,
-    'color': ColumnType.status,
+    'status': ColumnType.status,
     'tag': ColumnType.tags,
     'team': ColumnType.team,
     'text': ColumnType.text,
-    'timerange': ColumnType.timeline,
+    'timeline': ColumnType.timeline,
     'week': ColumnType.week,
-    'timezone': ColumnType.world_clock,
+    'world_clock': ColumnType.world_clock,
     'file': ColumnType.file,
-    'board-relation': ColumnType.board_relation,
+    'board_relation': ColumnType.board_relation,
     'subtasks': ColumnType.subitems,
-    'pulse-log': ColumnType.creation_log
+    'creation_log': ColumnType.creation_log,
+    'mirror': ColumnType.mirror
 }
 
 

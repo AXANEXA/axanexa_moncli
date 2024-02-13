@@ -3,6 +3,7 @@ import requests, json, time
 from . import MondayApiError
 from .graphql import *
 from .constants import *
+import re
 
 def execute_query(timeout: int = None, **kwargs):
     """Executes a graphql query via Rest.
@@ -67,8 +68,12 @@ def execute_query(timeout: int = None, **kwargs):
         else:
             query = query.replace('query {', 'query { complexity { before, after }')
 
-    headers = { 'Authorization': api_key }
+    headers = { 'Authorization': api_key , 'API-version':API_VERSION }
     data = { 'query': query, 'variables': variables }
+
+    # added by venkat to trace request payload
+    print("data=")
+    print(data)
 
     resp = requests.post(
         API_V2_ENDPOINT,
@@ -130,7 +135,8 @@ def upload_file(file_path: str, timeout = 300, **kwargs):
         data=data,
         files=files,
         timeout=timeout)
-
+    print("API Response")
+    print(resp)
     return _process_repsonse(api_key, timeout, resp, data, **kwargs)[query_name]
 
 
@@ -156,8 +162,29 @@ def get_field_list(fields: list, prefix: str = None, *args):
         args = list(args)
     if not args:
         args = fields
-    if 'id' not in args:
-        args.append('id')
+    
+    ## Venkat cchanges for Items_Page
+    # 
+    # aining 
+
+    str_items_page = "items_page"
+    str_next_items_page = "next_items_page"
+    str_cursor = "cursor"
+
+    if not (prefix==str_items_page or prefix==str_next_items_page) : # check for items_page
+               # Check if substring is part of List of Strings
+        #temp = '\t'.join(fields)
+        found_cursor = found = any(s.find(str_cursor) != -1 for s in fields)
+        found_itemspage = found = any(s.find(str_items_page) != -1 for s in fields)
+
+        found_cursor_arg = found = any(s.find(str_cursor) != -1 for s in args)
+        found_itemspage_arg = found = any(s.find(str_items_page) != -1 for s in args)
+
+
+        if not (found_itemspage or found_cursor or found_cursor_arg or found_itemspage_arg):
+            if 'id' not in args:
+                args.append('id') # add id if not items_page
+
     if prefix:
         return ['{}.{}'.format(prefix, arg) for arg in args]
     return args

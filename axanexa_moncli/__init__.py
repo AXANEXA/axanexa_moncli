@@ -1,11 +1,12 @@
-#import importlib
+import importlib
 
 from .enums import *
 from .config import *
 from .error import *
-from . import api_v2 as api
-from . import entities as en, column_value as cv
+#ver = "v10_2023"
+api = importlib.import_module(f".api_{api_version}", package="axanexa_moncli")
 
-#api = importlib.import_module(f".api_{api_version}", package="moncli")
+#from . import api_v2 as api
+from . import entities as en, column_value as cv
 
 client = en.MondayClient()
