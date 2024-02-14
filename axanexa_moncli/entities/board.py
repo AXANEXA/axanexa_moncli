@@ -1129,8 +1129,10 @@ class Board(_Board):
             args = cv_args
         else:
             args = api.get_field_list(api.DEFAULT_ITEM_PAGE_QUERY_FIELDS, None, *args)
+        next_items_page_kwargs = {}
         if 'items_page' in item_kwargs:
             next_items_page_kwargs = item_kwargs['items_page']
+
         page = 1
         #totdo nextpage item{} fix
         while cursor and (max_pages is None or page < max_pages):
