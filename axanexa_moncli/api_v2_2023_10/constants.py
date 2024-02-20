@@ -354,12 +354,12 @@ QUERY_MAP = {
             'items_page':{
                 'cursor': ArgumentValueKind.String,
                 'limit': ArgumentValueKind.Int,
-            
-                'items': {
-                 'ids': (ArgumentValueKind.List, ArgumentValueKind.Int)
+                'query_params': ArgumentValueKind.Dict
+                #'items': {
+                 #'ids': (ArgumentValueKind.List, ArgumentValueKind.Int)
                  #'limit': ArgumentValueKind.Int
                  #'page': ArgumentValueKind.Int - todo add query_params
-             }
+             #}
             },
 
             'items': {
@@ -428,7 +428,14 @@ QUERY_MAP = {
         DEFAULT_ITEM_PAGE_QUERY_FIELDS,
         {
             'limit': ArgumentValueKind.Int,
-            'cursor': ArgumentValueKind.String
+            'cursor': ArgumentValueKind.String,
+            'query_params': {
+                    'ids': (ArgumentValueKind.List, ArgumentValueKind.Default),
+                    'rules': (ArgumentValueKind.List, ArgumentValueKind.Default),
+                    'operator': ArgumentValueKind.String,
+                    'order_by' : (ArgumentValueKind.List, ArgumentValueKind.Default),
+                
+                }
             # todo 'query_params': {
              #   'rules': (ArgumentValueKind.List, ArgumentValueKind.Default)
             #}

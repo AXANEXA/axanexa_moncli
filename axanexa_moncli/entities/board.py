@@ -1089,7 +1089,7 @@ class Board(_Board):
  
         if get_column_values:
             args = list(args)
-            print(args)
+            #print(args)
             #if(len(args) == 0):
             for arg in ['items.column_values.{}'.format(arg) for arg in api.DEFAULT_COLUMN_VALUE_QUERY_FIELDS]:
                 if arg not in args:
@@ -1142,7 +1142,7 @@ class Board(_Board):
             next_items_page_data = api.get_next_items_page(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
             print("New Cursor= "+str(cursor))
-
+            print("New page= "+str(page))
             items_data.extend(next_items_page_data.get('items'))
             #print("items size= "+str(items_data.__len__()))
         

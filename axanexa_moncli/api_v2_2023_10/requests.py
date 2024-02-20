@@ -59,6 +59,8 @@ def execute_query(timeout: int = None, **kwargs):
     if not query:
         default_fields, default_arguments = QUERY_MAP.get(query_name, ([],{}))
         fields = get_field_list(default_fields, None, *fields)
+        if(query_name == 'next_items_page'):
+            fields.append('cursor')
         arguments = get_method_arguments(default_arguments, **arguments)
         query = GraphQLOperation(operation_type, query_name, FIELD_MAP, *fields, **arguments).format_body()
 
