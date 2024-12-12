@@ -33,6 +33,7 @@ MANIFEST
 
 #test file
 test.py
+test*.py
 
 # Installer logs
 pip-log.txt
