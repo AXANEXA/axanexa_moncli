@@ -163,7 +163,9 @@ class TimelineValue(ComplexNullValue):
             else:
                 return Timeline(from_date=from_date,to_date=to_date)
         except KeyError:
-            return Timeline(from_date=from_date,to_date=to_date)
+            if from_date and to_date:
+                return Timeline(from_date=from_date,to_date=to_date)
+            return None
 
     def _cast(self, value):
         try:

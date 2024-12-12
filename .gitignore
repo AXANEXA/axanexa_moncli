@@ -33,6 +33,7 @@ MANIFEST
 
 #test file
 test.py
+test*.py
 
 # Installer logs
 pip-log.txt
@@ -118,6 +119,7 @@ axanexa-moncli
 
 # Mac
 .DS_Store
+=======
 
 #test files
 test*.py
