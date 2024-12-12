@@ -9,7 +9,7 @@ config = {
     'url': r'https://github.com/AXANEXA/axanexa_moncli',
     'download_url': r'https://github.com/AXANEXA/axanexa_moncli',
     'author_email': 'tphan@axanexa.com',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'license': 'BSD 3',
     'install_requires': [
         'requests>=2.24.0',
@@ -25,6 +25,7 @@ config = {
         'axanexa_moncli',
         'axanexa_moncli.api_v1',
         'axanexa_moncli.api_v2',
+        'axanexa_moncli.api_v2_2023_10',
         'axanexa_moncli.entities',
         'axanexa_moncli.column_value'
     ],

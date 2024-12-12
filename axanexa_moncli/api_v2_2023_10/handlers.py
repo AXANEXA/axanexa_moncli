@@ -189,6 +189,13 @@ def get_boards(*args, **kwargs) -> List[Dict[str, Any]]:
         return items_results
         '''
     """
+    #itempage = kwargs.get('items_page')
+    #if itempage:
+     #   query_params = itempage.get('query_params')
+      #  if query_params:
+       #     json = gql.JsonValue(query_params)
+        #    itempage['query_params'] = json
+    print(kwargs)
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)  
 
 

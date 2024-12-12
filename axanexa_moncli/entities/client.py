@@ -688,7 +688,7 @@ class MondayClient():
 
         if get_column_values:
             args = list(args)
-            for arg in ['id', 'name', 'column_values.[*]', 'board.id', 'board.columns.[*]']:
+            for arg in ['id', 'name', 'column_values.[*]', 'board.id','board.name','board.columns.[*]']:
                 if arg not in args:
                     args.append(arg)
 

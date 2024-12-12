@@ -2,7 +2,7 @@ from dotenv import dotenv_values
 
 # API version
 #DEFAULT_API_VERSION = "v2"
-DEFAULT_API_VERSION = "v10_2023"
+DEFAULT_API_VERSION = "v2_2023_10"
 env = dotenv_values()
 if 'API_VERSION' in env:
     DEFAULT_API_VERSION = env['API_VERSION']   

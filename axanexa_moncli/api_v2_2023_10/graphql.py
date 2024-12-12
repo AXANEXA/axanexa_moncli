@@ -532,3 +532,5 @@ def create_value(value, value_type: ArgumentValueKind):
         return ListValue(value)
     elif value_type == ArgumentValueKind.Json:
         return JsonValue(value)
+    elif value_type == ArgumentValueKind.Dict:
+        return DictValue(value)
