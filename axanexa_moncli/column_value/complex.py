@@ -147,6 +147,8 @@ class TimelineValue(ComplexNullValue):
     allow_casts = (dict)
 
     def _convert(self,value):
+        from_date = None
+        to_date = None
         try:
             #print(value)
             if 'from' in value and 'to' in value:
