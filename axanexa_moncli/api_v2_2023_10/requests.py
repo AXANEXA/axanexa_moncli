@@ -70,13 +70,14 @@ def execute_query(timeout: int = None, **kwargs):
         else:
             query = query.replace('query {', 'query { complexity { before, after }')
 
-    headers = { 'Authorization': api_key , 'API-version':API_VERSION }
+    headers = { 'Authorization': api_key , 'API-version':API_VERSION , 'content-type':'application/json'}
     data = { 'query': query, 'variables': variables }
-
+    #data = { "query": query }
     # added by venkat to trace request payload
     print("data=")
     print(data)
-
+    #convert to json string
+    data = json.dumps(data)
     resp = requests.post(
         API_V2_ENDPOINT,
         headers=headers,
