@@ -1078,51 +1078,34 @@ class Board(_Board):
         max_pages = None
         cv_args = None
         if 'max_pages' in kwargs:
-            max_pages= kwargs.pop('max_pages')
+            max_pages = kwargs.pop('max_pages')
 
         item_kwargs = {}
         if kwargs:
-           # item_kwargs['items'] = kwargs
-            item_kwargs['items_page'] = kwargs.pop('items_page', {"limit":100})
-        
-        #item_kwargs = {'limit':500}
- 
+            item_kwargs['items_page'] = kwargs.pop('items_page', {"limit": 100})
+
         if get_column_values:
             args = list(args)
-            #print(args)
-            #if(len(args) == 0):
             for arg in ['items.column_values.{}'.format(arg) for arg in api.DEFAULT_COLUMN_VALUE_QUERY_FIELDS]:
                 if arg not in args:
                     args.append(arg)
             args.extend(['items.id', 'items.name'])
-            #else:
-              #  for index in range(len(args)):
-               #     arg = args[index]
-                #    print(arg)
-                 #   prefixed_cv = 'items.column_values.{}'.format(arg)
-                  #  args[index]= prefixed_cv
-
-            cv_args = list(args) # used in next page
+            cv_args = list(args)
             args = api.get_field_list(api.DEFAULT_ITEM_PAGE_QUERY_FIELDS, 'items_page', *args)
             args.extend(['items_page.cursor'])
-            
         else:
-           # args = api.get_field_list(api.DEFAULT_ITEM_QUERY_FIELDS, 'items', *args)
-            #args = item_kwargs
             args = api.get_field_list(api.DEFAULT_ITEM_PAGE_QUERY_FIELDS, 'items_page', *args)
-        print(args)
-        
+
         if kwargs:
             item_kwargs['items'] = kwargs
-## Item_page Arguement todo Venkat
+
         items_page_data = api.get_boards(
-            *args, 
+            *args,
             api_key=self.__creds.api_key_v2,
             ids=[int(self.id)],
             **item_kwargs)[0]['items_page']
-        
+
         cursor = items_page_data.get('cursor')
-        print(cursor)
         items_data = items_page_data.get('items')
         args.clear()
         if cv_args:
@@ -1134,23 +1117,13 @@ class Board(_Board):
             next_items_page_kwargs = item_kwargs['items_page']
 
         page = 1
-        #totdo nextpage item{} fix
         while cursor and (max_pages is None or page < max_pages):
-            print("cursor is there")
-        #   loop next_items_page
-            page+=1
-            next_items_page_data = api.get_next_items_page(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
+            page += 1
+            next_items_page_data = api.get_next_items_page(*args, api_key=self.__creds.api_key_v2, cursor=cursor, **next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
-            print("New Cursor= "+str(cursor))
-            print("New page= "+str(page))
             items_data.extend(next_items_page_data.get('items'))
-            #print("items size= "+str(items_data.__len__()))
-        
 
-        #items_page = 
-        items = [en.Item(creds=self.__creds,__board=self, **item_data) for item_data in items_data] 
-       
-       # items = items_page[0].items
+        items = [en.Item(creds=self.__creds, __board=self, **item_data) for item_data in items_data]
         if not as_model:
             return items
         if not issubclass(type(as_model), MondayModel):
@@ -1159,7 +1132,6 @@ class Board(_Board):
                 self.id,
                 'as_model parameter must be of MondayModel Type')
         return [as_model(item) for item in items]
- 
 
     def get_items_by_column_values(self, column_value: cv.ColumnValue, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
         """Search items in this board by their column values.
@@ -1228,62 +1200,49 @@ class Board(_Board):
         #extract limit from kwargs if exist
         max_pages = None
         if 'max_pages' in kwargs:
-            max_pages= kwargs.pop('max_pages')
+            max_pages = kwargs.pop('max_pages')
 
         item_kwargs = {}
         if kwargs:
-           # item_kwargs['items'] = kwargs
             item_kwargs['limit'] = kwargs.pop('limit', 100)
-        
+
         if get_column_values:
             args = list(args)
             for arg in ['{}'.format(arg) for arg in api.DEFAULT_ITEM_PAGE_COLUMN_VALUE_QUERY_FIELDS]:
                 if arg not in args:
                     args.append(arg)
- 
-        print(args)        
+
         if isinstance(column_value, cv.DateValue):
             value = column_value.date
-        elif isinstance(column_value, cv.StatusValue):
-            value = column_value.label
         elif isinstance(column_value, cv.StatusValue):
             value = column_value.label
         else:
             value = column_value.text.format()
 
-        print(value)   
         column_id = column_value.id
         column_values = [value]
-        print(column_values)   
 
         items_page_data = api.get_items_by_column_values(
-            self.id, 
-            column_id, 
-            column_values, 
+            self.id,
+            column_id,
+            column_values,
             *args,
-            api_key=self.__creds.api_key_v2, 
+            api_key=self.__creds.api_key_v2,
             **item_kwargs)
-        
+
         cursor = items_page_data.get('cursor')
-        print("cget_items_by_column_values ursor is there")
-        print(cursor)
         items_data = items_page_data.get('items')
         args.clear()
         args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
         next_items_page_kwargs = item_kwargs
         page = 1
         while cursor and (max_pages is None or page < max_pages):
-            print("cget_items_by_column_values ursor is there - in while")
-        #   loop next_items_page
-            page+=1
-            next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
+            page += 1
+            next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2, cursor=cursor, **next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
-            cursor = None
-            print("New Cursor= "+str(cursor))
             items_data.extend(next_items_page_data.get('items'))
-        
-        #print("items size= "+str(items_data.__len__()))
-        items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
+
+        items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data]
         if not as_model:
             return items
         if not issubclass(type(as_model), MondayModel):
@@ -1292,7 +1251,6 @@ class Board(_Board):
                 self.id,
                 'as_model parameter must be of MondayModel Type')
         return [as_model(item) for item in items]
-
 
     def get_items_page_by_column_values(self, column_id :str,column_values : list, get_column_values: bool = False, as_model: type = None, *args, **kwargs):
         """Search items in this board by their column values.
@@ -1375,21 +1333,6 @@ class Board(_Board):
                 if arg not in args:
                     args.append(arg)
  
-        #print(args)
-        """ todo
-        if isinstance(column_value, cv.DateValue):
-            value = column_value.date
-        elif isinstance(column_value, cv.StatusValue):
-            value = column_value.label
-        else:
-            value = column_value.format()
-"""     #todo
-        #column = self.get_column(id=column_id)
-        #if column.column_type == ColumnType.numbers:
-        #    value = [str(value) for value in column_values]
-        #else:
-        #    value = column_values
-
         items_page_data = api.get_items_by_column_values(
             self.id, 
             column_id, 
@@ -1399,22 +1342,17 @@ class Board(_Board):
             **item_kwargs)
         
         cursor = items_page_data.get('cursor')
-        print("cget_items_by_column_values ursor is there")
-        print(cursor)
         items_data = items_page_data.get('items')
         args.clear()
         args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
         next_items_page_kwargs = item_kwargs
         page = 1
         while cursor and (max_pages is None or (page < max_pages)):
-            #print("cget_items_by_column_values ursor is there - in while")
         #   loop next_items_page
             page+=1
             next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
-            print("New Cursor= "+str(cursor))
             items_data.extend(next_items_page_data.get('items'))
-       # print("items size= "+str(items_data.__len__()))
         items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
         if not as_model:
             return items
@@ -1507,21 +1445,6 @@ class Board(_Board):
                 if arg not in args:
                     args.append(arg)
  
-        #print(args)
-        """ todo
-        if isinstance(column_value, cv.DateValue):
-            value = column_value.date
-        elif isinstance(column_value, cv.StatusValue):
-            value = column_value.label
-        else:
-            value = column_value.format()
-"""     #todo
-        #column = self.get_column(id=column_id)
-        #if column.column_type == ColumnType.numbers:
-        #    value = [str(value) for value in column_values]
-        #else:
-        #    value = column_values
-
         items_page_data = api.get_items_page_by_multi_column_values(
             self.id, 
             columns, 
@@ -1530,22 +1453,17 @@ class Board(_Board):
             **item_kwargs)
         
         cursor = items_page_data.get('cursor')
-        print("cget_items_by_column_values ursor is there")
-        print(cursor)
         items_data = items_page_data.get('items')
         args.clear()
         args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
         next_items_page_kwargs = item_kwargs
         page = 1
         while cursor and (max_pages is None or (page < max_pages)):
-            #print("cget_items_by_column_values ursor is there - in while")
         #   loop next_items_page
             page+=1
             next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
-            print("New Cursor= "+str(cursor))
             items_data.extend(next_items_page_data.get('items'))
-       # print("items size= "+str(items_data.__len__()))
         items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
         if not as_model:
             return items
@@ -1643,17 +1561,14 @@ class Board(_Board):
                 if arg not in args:
                     args.append(arg)
  
-        print(args)    
         if column.column_type == ColumnType.numbers:
             value = [str(value) for value in column_values]
         else:
             value = column_values
             
         
-        print(value)   
         column_id = column.id
         column_values = value
-        print(column_values)   
 
         items_page_data = api.get_items_by_column_values(
             self.id, 
@@ -1664,23 +1579,18 @@ class Board(_Board):
             **item_kwargs)
         
         cursor = items_page_data.get('cursor')
-        print("cget_items_by_column_mutli values ursor is there------")
-        print(cursor)
         items_data = items_page_data.get('items')
         args.clear()
         args = api.get_field_list(api.DEFAULT_NEXT_ITEM_PAGE_COLUMN_VALUEQUERY_FIELDS, None, *args)
         next_items_page_kwargs = item_kwargs
         page = 1
         while cursor and (max_pages is None or page < max_pages):
-            print("cget_items_by_column_values ursor is there - in while")
         #   loop next_items_page
             page+=1
             next_items_page_data = api.get_next_items_page_by_column_values(*args, api_key=self.__creds.api_key_v2,cursor=cursor,**next_items_page_kwargs)
             cursor = next_items_page_data.get('cursor')
-            print("New Cursor= "+str(cursor))
             items_data.extend(next_items_page_data.get('items'))
         
-        print("items size= "+str(items_data.__len__()))
         items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
         if not as_model:
             return items

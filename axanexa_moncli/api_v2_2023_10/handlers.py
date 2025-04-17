@@ -168,34 +168,12 @@ def get_boards(*args, **kwargs) -> List[Dict[str, Any]]:
     """
    
  
-    print ("hello v2023_10")
-    """
-    #check args to see if we have anything items.X if so then we need to deal with the query differently
-
- 
-    if is_get_items: # this wrong
-        print("board.getItems call found")
-        #issue initial query based on items_page
-        temp_result = execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
-        print(temp_result)
-        return temp_result
-        '''
-        items_results = temp_result['items_page']['items']
-        #check if cursor exists
-        while cursor is not None:
-            #issue subsequent query based on items_page
-                temp_results_page=execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)                  
-                items_results.append(temp_results_page['next_items_page']['items'])
-        return items_results
-        '''
-    """
     #itempage = kwargs.get('items_page')
     #if itempage:
      #   query_params = itempage.get('query_params')
       #  if query_params:
        #     json = gql.JsonValue(query_params)
         #    itempage['query_params'] = json
-    print(kwargs)
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=BOARDS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)  
 
 
@@ -1160,13 +1138,6 @@ def get_next_items_page(*args, **kwargs):
             mewest_first : `bool`
                 Get the recently created items at the top of the list.
     """
-    # venkat tracing undo later
-    print('NEXT_ITEMS_PAGE=')
-    print(ITEMS) 
-    print('args=')
-    print(args)
-    print('kwargs=')
-    print(kwargs)
     
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=NEXT_ITEMS_PAGE, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
 
@@ -1228,13 +1199,6 @@ def get_items(*args, **kwargs):
             mewest_first : `bool`
                 Get the recently created items at the top of the list.
     """
-    # venkat tracing undo later
-    print('items=')
-    print(ITEMS) 
-    print('args=')
-    print(args)
-    print('kwargs=')
-    print(kwargs)
 
     return execute_query(api_key=kwargs.pop('api_key', None), query_name=ITEMS, operation_type=gql.OperationType.QUERY, fields=args, arguments=kwargs)
 

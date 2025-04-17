@@ -39,7 +39,6 @@ class MondayModel(Model):
                 continue                
             key = get_key(field_type)
             if not key:
-                print('Field {} contains no configured column ID or title.'.format(field))
                 continue
             try:
                 column_values = item.column_values

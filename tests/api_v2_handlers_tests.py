@@ -8,11 +8,11 @@ EXECUTE_QUERY_PATCH = 'moncli.api_v2.handlers.execute_query'
 UPLOAD_FILE_PATCH = 'moncli.api_v2.handlers.upload_file'
 
 def setup():
-    print('SETUP')
+    pass
 
 
 def teardown():
-    print('TEARDOWN')
+    pass
 
 @patch(EXECUTE_QUERY_PATCH)
 def test_create_board(execute_query):
@@ -85,7 +85,6 @@ def test_remove_subscribers_from_board(execute_query):
     name = 'name'
     execute_query.return_value = [{'id': user_id, 'name': name}]
 
-    print(execute_query)
     # Act
     subscribers = handlers.delete_subscribers_from_board('1', ['1'])
 

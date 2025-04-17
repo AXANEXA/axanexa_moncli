@@ -119,7 +119,6 @@ class GraphQLField(GraphQLNode):
         """
 
         for field in args:
-            #print("field",field)
             if not field or field == '':
                 continue
             
@@ -131,9 +130,7 @@ class GraphQLField(GraphQLNode):
                 #todo
                 else:
                     field = field.replace('...','3DOTS')
-                    print("field",field)
                     field_split = field.split('.')
-                    print("dot3_result",field_split)
                     parent_field = field_split[0]
                     #if '...' in parent_field:
                     #    parent_field = parent_field.replace('3DOTS','...')
@@ -317,11 +314,6 @@ class GraphQLField(GraphQLNode):
                     The amended GraphQL query string.
 
         """
-        #print("body",body)
-        #for child in self.__children.values():
-            #print("child.names",child.name)
-            #print("child.values",child.__children.values())
-            #print("child.format_body",child.format_body())
         
         formatted_children = ', '.join([child.format_body() for child in self.__children.values()])
         formatted_children = formatted_children.replace('3DOTS','...')

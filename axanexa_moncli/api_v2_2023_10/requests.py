@@ -72,10 +72,6 @@ def execute_query(timeout: int = None, **kwargs):
 
     headers = { 'Authorization': api_key , 'API-version':API_VERSION , 'content-type':'application/json'}
     data = { 'query': query, 'variables': variables }
-    #data = { "query": query }
-    # added by venkat to trace request payload
-    print("data=")
-    print(data)
     #convert to json string
     data = json.dumps(data)
     resp = requests.post(
@@ -138,8 +134,6 @@ def upload_file(file_path: str, timeout = 300, **kwargs):
         data=data,
         files=files,
         timeout=timeout)
-    print("API Response")
-    print(resp)
     return _process_repsonse(api_key, timeout, resp, data, **kwargs)[query_name]
 
 

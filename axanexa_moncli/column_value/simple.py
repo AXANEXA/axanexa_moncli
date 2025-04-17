@@ -17,7 +17,6 @@ class DateValue(ComplexNullValue):
         try:
             new_date = datetime.strptime(value['date'], DATE_FORMAT)
         except (KeyError, ValueError, TypeError):
-            print(value)
             return None
         try:
             new_time = datetime.strptime(value['time'], TIME_FORMAT)
