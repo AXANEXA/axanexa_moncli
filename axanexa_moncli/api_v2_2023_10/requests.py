@@ -53,7 +53,7 @@ def execute_query(timeout: int = None, **kwargs):
     fields = kwargs.pop('fields', ())
     arguments = kwargs.pop('arguments', {})
     query = kwargs.pop('query', None)
-    variables = kwargs.pop('variables', None)
+    variables = kwargs.pop('variables', {})
     include_complexity = kwargs.pop('include_complexity', False)
 
     if not query:
