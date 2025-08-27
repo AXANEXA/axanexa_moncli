@@ -230,18 +230,24 @@ def _process_repsonse(api_key: str, timeout: int, resp, data, **kwargs):
     if resp.status_code == 403 or resp.status_code == 500:
         raise MondayApiError(json.dumps(data), resp.status_code, '', [text['error_message']])
     if resp.status_code == 429:
-        time.sleep(5)
-        return execute_query(api_key, timeout, **kwargs)
+        errors = text['errors']
+        if len(errors)>0 and 'extensions' in errors[0]:
+            extensions = errors[0]['extensions']
+            if 'retry_in_seconds' in extensions:
+                retry_in_seconds = extensions['retry_in_seconds']
+                time.sleep(retry_in_seconds+0.2)
+                raise MondayApiError(json.dumps(data), resp.status_code, '', errors)
+#                return execute_query(api_key, **kwargs)
+#        time.sleep(5)
+        #return execute_query(api_key, timeout, **kwargs)
     if text.__contains__('errors'):
         errors = text['errors']
-        if not 'Query has complexity of' in errors[0]['message']: 
-            error_query = json.dumps(data)
-            status_code = resp.status_code
-            errors = text['errors']
-            raise MondayApiError(error_query, status_code, '', errors)
-        # Wait for 5 seconds and try again in case of rate limiting... ^
-        time.sleep(5)
-        return execute_query(api_key, timeout, **kwargs)
+        if len(errors)>0 and 'extensions' in errors[0]:
+            extensions = errors[0]['extensions']
+            if 'retry_in_seconds' in extensions:
+                retry_in_seconds = extensions['retry_in_seconds']
+                time.sleep(retry_in_seconds+0.2)
+                raise MondayApiError(json.dumps(data), resp.status_code, '', errors)
     # Raise exception for parse errors.
     if text.__contains__('error_code'):
         error_query = json.dumps(data)
