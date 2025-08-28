@@ -5,7 +5,7 @@ from .. import api, entities as en, column_value as cv
 from ..enums import *
 from ..error import BoardError
 from ..models import MondayModel
-
+from ..api_v2_2023_10.requests import MondayApiError
 
 class _Board(Model):
     """The base data model for a board"""
@@ -1117,11 +1117,21 @@ class Board(_Board):
             next_items_page_kwargs = item_kwargs['items_page']
 
         page = 1
+        max_retries = 20
         while cursor and (max_pages is None or page < max_pages):
             page += 1
-            next_items_page_data = api.get_next_items_page(*args, api_key=self.__creds.api_key_v2, cursor=cursor, **next_items_page_kwargs)
-            cursor = next_items_page_data.get('cursor')
-            items_data.extend(next_items_page_data.get('items'))
+            try:
+                next_items_page_data = api.get_next_items_page(*args, api_key=self.__creds.api_key_v2, cursor=cursor, **next_items_page_kwargs)
+                cursor = next_items_page_data.get('cursor')
+                items_data.extend(next_items_page_data.get('items'))
+                print('Fetched page {} of items for board {}'.format(page, self.id))
+                print ('total items fetched so far {}'.format(len(items_data)))
+                max_retries = 20
+            except Exception as ex:
+                print('Error occurred while fetching next items page retrying for 20 times: {}'.format(ex))
+                max_retries -= 1
+                if max_retries <= 0:
+                    raise MondayApiError('max_retries_exceeded', 'Max retries exceeded while fetching next items page')
 
         items = [en.Item(creds=self.__creds, __board=self, **item_data) for item_data in items_data]
         if not as_model:
