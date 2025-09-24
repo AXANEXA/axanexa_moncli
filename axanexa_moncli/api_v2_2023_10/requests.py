@@ -78,7 +78,7 @@ def execute_query(timeout: int = None, **kwargs):
         API_V2_ENDPOINT,
         headers=headers,
         data=data,
-        timeout=timeout,verify=False)
+        timeout=timeout)
 
     return _process_repsonse(api_key, timeout, resp, data, **kwargs)[query_name]
 
@@ -133,8 +133,7 @@ def upload_file(file_path: str, timeout = 300, **kwargs):
         headers=headers,
         data=data,
         files=files,
-        timeout=timeout,
-        verify=False
+        timeout=timeout
         )
     return _process_repsonse(api_key, timeout, resp, data, **kwargs)[query_name]
 
