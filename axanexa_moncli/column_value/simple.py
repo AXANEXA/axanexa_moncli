@@ -78,7 +78,11 @@ class DropdownValue(ComplexNullValue):
 
     def _convert(self, value):
         labels = self.settings['labels']
+        if 'ids' not in value:
+            return []
+        
         ids = value['ids']
+
         label_list = []
 
         for item in labels:
