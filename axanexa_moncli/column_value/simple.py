@@ -322,7 +322,7 @@ class PeopleValue(ComplexNullValue):
 
     def _convert(self, value):
         return_list = []
-        value_list = value['personsAndTeams']
+        value_list = value.get('personsAndTeams', [])
         for value_data in value_list:
             return_data = PersonOrTeam(
                             value_data['id'], 
