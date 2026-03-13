@@ -26,6 +26,7 @@ config = {
         'axanexa_moncli.api_v1',
         'axanexa_moncli.api_v2',
         'axanexa_moncli.api_v2_2023_10',
+        'axanexa_moncli.api_v2_2026_01',
         'axanexa_moncli.entities',
         'axanexa_moncli.column_value'
     ],
