@@ -87,13 +87,15 @@ class ItemLinkValue(ComplexNullValue):
     native_type = list
     native_default = []
 
-    def _convert(self, value):
-        try:
-            list_id = value['linkedPulseIds']
-            item_id = [id_value['linkedPulseId'] for id_value in list_id ]
-            return item_id
-        except KeyError:
-            return []
+    def __init__(self, **kwargs):
+        linked_item_ids = kwargs.pop('linked_item_ids', None)
+        linked_items = kwargs.pop('linked_items', None)
+        super().__init__(**kwargs)
+        # Override with data from BoardRelationValue inline fragment if present
+        if linked_item_ids is not None:
+            self._value = [int(i) for i in linked_item_ids] if linked_item_ids else []
+        elif linked_items is not None:
+            self._value = [int(item['id']) for item in linked_items] if linked_items else []
 
     def _format(self):
         item_ids = []

@@ -48,4 +48,8 @@ def convert_dicts(input_dict):
     if 'display_value' in input_dict:
         result_dict['display_value'] = input_dict['display_value']
         result_dict['text'] = input_dict['display_value']
+    if 'linked_item_ids' in input_dict:
+        result_dict['linked_item_ids'] = input_dict['linked_item_ids']
+    if 'linked_items' in input_dict:
+        result_dict['linked_items'] = input_dict['linked_items']
     return result_dict
