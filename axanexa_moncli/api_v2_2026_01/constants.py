@@ -192,7 +192,9 @@ DEFAULT_COLUMN_VALUE_QUERY_FIELDS = [
     '3DOTSon MirrorValue.display_value',
     '3DOTSon BoardRelationValue.display_value',
     '3DOTSon BoardRelationValue.linked_item_ids',
-    '3DOTSon BoardRelationValue.linked_items.id'
+    '3DOTSon BoardRelationValue.linked_items.id',
+    '3DOTSon SubtasksValue.subitems_ids',
+    '3DOTSon SubtasksValue.subitems.id'
 ]
 
 

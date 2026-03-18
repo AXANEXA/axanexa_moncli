@@ -39,9 +39,19 @@ class LastUpdatedValue(ReadonlyValue):
 
 class SubitemsValue(ReadonlyValue):
     """An item link column value."""
-    
+
     native_type = list
     native_default = []
+
+    def __init__(self, **kwargs):
+        subitems_ids = kwargs.pop('subitems_ids', None)
+        subitems = kwargs.pop('subitems', None)
+        super().__init__(**kwargs)
+        # Override with data from SubtasksValue inline fragment if present
+        if subitems_ids is not None:
+            self._value = [int(i) for i in subitems_ids] if subitems_ids else []
+        elif subitems is not None:
+            self._value = [int(item['id']) for item in subitems] if subitems else []
 
     def _convert(self, value):
         try:

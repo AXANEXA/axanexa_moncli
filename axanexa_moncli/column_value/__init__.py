@@ -52,4 +52,8 @@ def convert_dicts(input_dict):
         result_dict['linked_item_ids'] = input_dict['linked_item_ids']
     if 'linked_items' in input_dict:
         result_dict['linked_items'] = input_dict['linked_items']
+    if 'subitems_ids' in input_dict:
+        result_dict['subitems_ids'] = input_dict['subitems_ids']
+    if 'subitems' in input_dict:
+        result_dict['subitems'] = input_dict['subitems']
     return result_dict
