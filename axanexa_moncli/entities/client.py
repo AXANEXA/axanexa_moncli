@@ -695,10 +695,23 @@ class MondayClient():
         if kwargs.__contains__('ids'):
             kwargs['ids'] = [int(id) for id in kwargs['ids']]
 
-        items_data = api.get_items(
-            *args,
-            api_key=self.__creds.api_key_v2, 
-            **kwargs)
+        # Batch IDs into chunks of 100 to avoid API limit
+        ids = kwargs.get('ids')
+        if ids and len(ids) > 100:
+            items_data = []
+            for i in range(0, len(ids), 100):
+                batch_kwargs = {**kwargs, 'ids': ids[i:i+100]}
+                batch_data = api.get_items(
+                    *args,
+                    api_key=self.__creds.api_key_v2,
+                    **batch_kwargs)
+                if batch_data:
+                    items_data.extend(batch_data)
+        else:
+            items_data = api.get_items(
+                *args,
+                api_key=self.__creds.api_key_v2,
+                **kwargs)
         items = [en.Item(creds=self.__creds, **item_data) for item_data in items_data] 
         if not as_model:
             return items
